@@ -23,6 +23,8 @@ import FAQ from './pages/FAQ';
 import Support from './pages/Support';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import ProjectInfo from './pages/ProjectInfo';
 import Documentation from './pages/Documentation';
 import NotFound from './pages/NotFound';
@@ -159,6 +161,8 @@ function App() {
               } />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/server-error" element={<ServerError />} />
               <Route path="/chat" element={<ChatInterface />} />
               <Route path="*" element={<NotFound />} />

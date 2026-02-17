@@ -9,10 +9,24 @@ import {
   Menu,
   User,
   Bot,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
+  Settings,
+  Copy,
+  Link2,
+  Check,
 } from 'lucide-react';
 import { Message, Conversation, ChatHistoryItem, BotResponse } from '../types';
 import { apiClient } from '../utils/apiClient';
 import { useToast } from '../hooks/useToast';
+import { useVoiceInput } from '../hooks/useVoiceInput';
+import { useVoiceOutput } from '../hooks/useVoiceOutput';
+import { formatTextForSpeech, truncateForSpeech, cleanResponseText } from '../utils/voiceUtils';
+import { copyToClipboard, formatTextForCopy } from '../utils/copyUtils';
+import { VoiceSettings } from './VoiceSettings';
+import { ReferenceModal } from './ReferenceModal';
 
 function ChatInterface() {
   const [conversations, setConversations] = useState<Conversation[]>([
@@ -28,10 +42,38 @@ function ChatInterface() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<ChatHistoryItem[]>([]);
+  const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { showError, showSuccess } = useToast();
+
+  // Voice input and output hooks
+  const {
+    isListening,
+    transcript,
+    startListening,
+    stopListening,
+    resetTranscript,
+    isBrowserSupported: isVoiceInputSupported,
+    error: voiceInputError,
+  } = useVoiceInput();
+
+  const {
+    isSpeaking,
+    speak,
+    stop: stopSpeaking,
+    isBrowserSupported: isVoiceOutputSupported,
+    voices,
+    setVoiceRate,
+    setVoiceVolume,
+    setVoice,
+  } = useVoiceOutput();
+
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [referenceModalOpen, setReferenceModalOpen] = useState(false);
+  const [selectedMessageForReference, setSelectedMessageForReference] = useState<Message | null>(null);
 
   const activeConversation = conversations.find((c) => c.id === activeConversationId);
 
@@ -132,6 +174,27 @@ function ChatInterface() {
   };
   useEffect(scrollToBottom, [activeConversation?.messages]);
 
+  // Handle voice input error
+  useEffect(() => {
+    if (voiceInputError) {
+      showError('Voice Error', voiceInputError);
+    }
+  }, [voiceInputError, showError]);
+
+  // Handle voice input results
+  useEffect(() => {
+    if (!isListening && transcript.trim()) {
+      setInput(transcript.trim());
+    }
+  }, [isListening, transcript]);
+
+  // Clear speaking message ID when speech ends
+  useEffect(() => {
+    if (!isSpeaking && speakingMessageId) {
+      setSpeakingMessageId(null);
+    }
+  }, [isSpeaking, speakingMessageId]);
+
   
 
   const handleSendMessage = async (content: string) => {
@@ -177,23 +240,26 @@ function ChatInterface() {
           inner = (body as Record<string, unknown>)['data'];
         }
 
-        if (typeof inner === 'object' && inner !== null && typeof (inner as any).answer === 'string') {
-          botContent = (inner as any).answer as string;
+        if (typeof inner === 'object' && inner !== null && typeof (inner as {answer?: string}).answer === 'string') {
+          botContent = (inner as {answer: string}).answer;
         } else if (typeof body === 'string') {
           botContent = body;
         } else {
           // Fallback: stringify minimal piece to avoid showing entire wrapper
           try {
             botContent = JSON.stringify(inner).slice(0, 200);
-          } catch (e) {
+          } catch {
             botContent = 'Sorry, the assistant returned an unexpected response.';
           }
         }
       }
 
+      // Clean and format the bot response for better readability
+      const cleanedContent = cleanResponseText(botContent);
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: botContent,
+        content: cleanedContent,
         role: 'assistant',
         timestamp: new Date(),
       };
@@ -265,6 +331,7 @@ function ChatInterface() {
     if (input.trim()) {
       handleSendMessage(input.trim());
       setInput('');
+      resetTranscript(); // Clear transcript to prevent duplication
       if (inputRef.current) inputRef.current.style.height = 'auto';
     }
   };
@@ -290,14 +357,118 @@ function ChatInterface() {
     setConversations((prev) => prev.filter((c) => c.id !== id));
   };
 
+  const handleVoiceInput = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      if (!isVoiceInputSupported) {
+        showError('Not Supported', 'Your browser doesn\'t support voice input');
+        return;
+      }
+      resetTranscript();
+      startListening();
+    }
+  };
 
-  const parseMarkdown = (text: string) => {
-    let html = text;
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    html = html.replace(/`(.*?)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm">$1</code>');
-    html = html.replace(/\n\n/g, '</p><p>');
-    html = '<p>' + html + '</p>';
+  const handleSpeakMessage = (messageId: string, content: string) => {
+    if (speakingMessageId === messageId) {
+      // If already speaking this message, stop it
+      stopSpeaking();
+      setSpeakingMessageId(null);
+    } else {
+      // Speak the message
+      if (!isVoiceOutputSupported) {
+        showError('Not Supported', 'Your browser doesn\'t support voice output');
+        return;
+      }
+      setSpeakingMessageId(messageId);
+      
+      // Format text for speech: remove markdown, HTML tags, and truncate
+      const cleanedText = formatTextForSpeech(content);
+      const finalText = truncateForSpeech(cleanedText, 1500);
+      
+      speak(finalText);
+    }
+  };
+
+  const handleCopyMessage = async (messageId: string, content: string) => {
+    const cleanedText = formatTextForCopy(cleanAndParseText(content));
+    const success = await copyToClipboard(cleanedText);
+    
+    if (success) {
+      setCopiedMessageId(messageId);
+      showSuccess('Copied!', 'Answer copied to clipboard');
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    } else {
+      showError('Copy Failed', 'Unable to copy to clipboard');
+    }
+  };
+
+  const handleOpenReference = (message: Message) => {
+    setSelectedMessageForReference(message);
+    setReferenceModalOpen(true);
+  };
+
+  const cleanAndParseText = (text: string) => {
+    // First, clean up raw text
+    let cleaned = text;
+    
+    // Remove standalone asterisks at line start
+    cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
+    
+    // Convert markdown bold and italic to HTML
+    cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
+    cleaned = cleaned.replace(/__(.*?)__/g, '<strong class="font-bold text-gray-900">$1</strong>');
+    cleaned = cleaned.replace(/\*(.*?)\*/g, '<em class="italic text-gray-900">$1</em>');
+    cleaned = cleaned.replace(/_(.*?)_/g, '<em class="italic text-gray-900">$1</em>');
+    
+    // Handle numbered and bullet lists
+    const lines = cleaned.split('\n');
+    let html = '';
+    let inParagraph = false;
+    
+    for (let line of lines) {
+      line = line.trim();
+      
+      if (line === '') {
+        if (inParagraph) {
+          html += '</p>';
+          inParagraph = false;
+        }
+      } else if (/^(\d+)\.|\s*•/.test(line)) {
+        if (inParagraph) {
+          html += '</p>';
+          inParagraph = false;
+        }
+        html += '<div style="margin: 0.5em 0 0.5em 2em; line-height: 1.6; color: #000;">' + line + '</div>';
+      } else if (/^#+\s+/.test(line)) {
+        if (inParagraph) {
+          html += '</p>';
+          inParagraph = false;
+        }
+        const level = line.match(/^#+/)?.[0].length || 1;
+        const title = line.replace(/^#+\s+/, '');
+        html += `<h${level} style="font-weight: bold; margin: 1em 0 0.5em 0; font-size: ${2 - level * 0.2}em; color: #000;">${title}</h${level}>`;
+      } else {
+        if (!inParagraph) {
+          html += '<p style="margin: 0.5em 0; line-height: 1.6; color: #000;">';
+          inParagraph = true;
+        }
+        html += line + ' ';
+      }
+    }
+    
+    if (inParagraph) {
+      html += '</p>';
+    }
+    
+    // Handle inline code
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-900">$1</code>');
+    
+    // Clean up extra spacing
+    html = html.replace(/<p>\s*<\/p>/g, '');
+    html = html.replace(/\s+<\/p>/g, '</p>');
+    
     return html;
   };
 
@@ -425,21 +596,30 @@ function ChatInterface() {
                 ChatBot-AI Legal Assistant
               </h1>
             </div>
-            <button
-              onClick={() =>
-                setConversations((prev) =>
-                  prev.map((c) =>
-                    c.id === activeConversationId
-                      ? { ...c, messages: [], title: 'New Conversation' }
-                      : c
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setVoiceSettingsOpen(true)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                title="Voice settings"
+              >
+                <Settings className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
+              </button>
+              <button
+                onClick={() =>
+                  setConversations((prev) =>
+                    prev.map((c) =>
+                      c.id === activeConversationId
+                        ? { ...c, messages: [], title: 'New Conversation' }
+                        : c
+                    )
                   )
-                )
-              }
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
-              title="Clear conversation"
-            >
-              <Trash2 className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
-            </button>
+                }
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                title="Clear conversation"
+              >
+                <Trash2 className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
+              </button>
+            </div>
           </div>
         </header>
 
@@ -459,27 +639,75 @@ function ChatInterface() {
                   }`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
                       <Bot className="w-5 h-5 text-white" />
                     </div>
                   )}
-                  <div
-                    className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                      msg.role === 'user'
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                        : 'bg-white border'
-                    }`}
-                  >
-                    {msg.role === 'assistant' ? (
-                      <div
-                        dangerouslySetInnerHTML={{ __html: parseMarkdown(msg.content) }}
-                      />
-                    ) : (
-                      <p>{msg.content}</p>
+                  <div className="flex flex-col gap-2">
+                    <div
+                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+                        msg.role === 'user'
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                          : 'bg-white border'
+                      }`}
+                    >
+                      {msg.role === 'assistant' ? (
+                        <div
+                          dangerouslySetInnerHTML={{ __html: cleanAndParseText(msg.content) }}
+                        />
+                      ) : (
+                        <p>{msg.content}</p>
+                      )}
+                    </div>
+                    {msg.role === 'assistant' && (
+                      <div className="flex flex-wrap gap-2 self-start ml-2">
+                        {/* Voice Button */}
+                        <button
+                          onClick={() => handleSpeakMessage(msg.id, msg.content)}
+                          title={speakingMessageId === msg.id ? 'Stop speaking' : 'Speak message'}
+                          className={`p-2 rounded-lg transition-all ${
+                            speakingMessageId === msg.id
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {speakingMessageId === msg.id ? (
+                            <VolumeX className="w-4 h-4" />
+                          ) : (
+                            <Volume2 className="w-4 h-4" />
+                          )}
+                        </button>
+
+                        {/* Copy Button */}
+                        <button
+                          onClick={() => handleCopyMessage(msg.id, msg.content)}
+                          title="Copy answer"
+                          className={`p-2 rounded-lg transition-all ${
+                            copiedMessageId === msg.id
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {copiedMessageId === msg.id ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                        </button>
+
+                        {/* Reference Button */}
+                        <button
+                          onClick={() => handleOpenReference(msg)}
+                          title="View references"
+                          className="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                        >
+                          <Link2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     )}
                   </div>
                   {msg.role === 'user' && (
-                    <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0">
                       <User className="w-5 h-5 text-white" />
                     </div>
                   )}
@@ -518,13 +746,37 @@ function ChatInterface() {
                 ref={inputRef}
                 value={input}
                 onChange={handleInputChange}
-                placeholder="Type your message..."
-                className="w-full resize-none rounded-2xl border border-gray-300 px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder={isListening ? 'Listening...' : 'Type your message...'}
+                className={`w-full resize-none rounded-2xl border px-4 py-3 pr-24 focus:outline-none focus:ring-2 ${
+                  isListening
+                    ? 'border-red-400 bg-red-50 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-blue-500'
+                }`}
               />
+              
+              {/* Microphone Button */}
+              <button
+                type="button"
+                onClick={handleVoiceInput}
+                title={isListening ? 'Stop listening' : 'Start voice input'}
+                className={`absolute right-14 bottom-2 p-2 rounded-xl transition-all ${
+                  isListening
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {isListening ? (
+                  <MicOff className="w-5 h-5" />
+                ) : (
+                  <Mic className="w-5 h-5" />
+                )}
+              </button>
+
+              {/* Send Button */}
               <button
                 type="submit"
                 disabled={!input.trim()}
-                className="absolute right-2 bottom-2 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700"
+                className="absolute right-2 bottom-2 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 disabled:opacity-50"
               >
                 <Send className="w-5 h-5" />
               </button>
@@ -532,6 +784,26 @@ function ChatInterface() {
           </div>
         </div>
       </div>
+
+      {/* Voice Settings Modal */}
+      <VoiceSettings
+        isOpen={voiceSettingsOpen}
+        onClose={() => setVoiceSettingsOpen(false)}
+        onRateChange={setVoiceRate}
+        onVolumeChange={setVoiceVolume}
+        voices={voices}
+        onVoiceChange={setVoice}
+      />
+
+      {/* Reference Modal */}
+      <ReferenceModal
+        isOpen={referenceModalOpen}
+        onClose={() => setReferenceModalOpen(false)}
+        domain={selectedMessageForReference?.domain}
+        source={selectedMessageForReference?.source}
+        citations={selectedMessageForReference?.citations}
+        messageContent={selectedMessageForReference?.content}
+      />
     </div>
   );
 }

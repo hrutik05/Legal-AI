@@ -1,11 +1,13 @@
 import express from 'express';
-import { signup, login, saveChatHistory, getChatHistory } from '../controllers/authController.js';
+import { signup, login, saveChatHistory, getChatHistory, forgotPassword, resetPassword } from '../controllers/authController.js';
 import { chatbotQuery, deleteChatHistoryItem } from '../controllers/chatbotController.js';
 
 const router = express.Router();
 
 router.post('/signup', signup);
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 // Save chat history
 router.post('/chat-history', saveChatHistory);

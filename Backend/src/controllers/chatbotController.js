@@ -269,8 +269,8 @@ const LAW_PATTERNS = [
   /\bhuman\s+rights\b/i,
   /\bcourt\s+me\b/i,
   /\bwrit\b/i,
-  /\bpill?\b/i
-
+  /\bpill?\b/i,
+  /\bkarvai\b/i,
 
 ];
 // Function to check if query is law-related

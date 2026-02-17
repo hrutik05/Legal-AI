@@ -32,7 +32,7 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Legal Areas</h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-500">
@@ -42,12 +42,12 @@ export default function Footer() {
               <li><Link to="/property-law" className="hover:text-white dark:hover:text-gray-300 transition-colors">Property Law</Link></li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Resources</h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-500">
               <li>
-                <Link 
+                <Link
                   to="/api-reference"
                   className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center group"
                 >
@@ -58,7 +58,7 @@ export default function Footer() {
               <li>
               </li>
               <li>
-                <Link 
+                <Link
                   to="/user-guide"
                   className="hover:text-white dark:hover:text-gray-300 transition-colors group"
                 >
@@ -66,7 +66,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   to="/faq"
                   className="hover:text-white dark:hover:text-gray-300 transition-colors group"
                 >
@@ -74,7 +74,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   to="/support"
                   className="hover:text-white dark:hover:text-gray-300 transition-colors group"
                 >
@@ -83,35 +83,33 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Project Info</h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-500">
               <li><a href="#about" className="hover:text-white dark:hover:text-gray-300 transition-colors">About the Project</a></li>
               <li>
-                <Link 
-                  to="/project-info" 
-                  target="_blank" 
+                <Link
+                  to="/project-info"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center"
                 >
                   Project Information <ExternalLink className="w-3 h-3 ml-1" />
                 </Link>
               </li>
-              <li><Link 
-                  to="/documentation"
-                  className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center group"
-                >
-                  <span className="group-hover:underline">Full Documentation</span>
-                  <ExternalLink className="w-3 h-3 ml-1 group-hover:scale-110 transition-transform" />
-                </Link></li>
-              {/* <li><a href="#tech-stack" className="hover:text-white dark:hover:text-gray-300 transition-colors">Technology Stack</a></li> */}
-              {/* <li><a href="#" className="hover:text-white dark:hover:text-gray-300 transition-colors">Contribute</a></li> */}
-              {/* <li><a href="#contact" className="hover:text-white dark:hover:text-gray-300 transition-colors">Contact Us</a></li> */}
+              <li><Link
+                to="/documentation"
+                className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center group"
+              >
+                <span className="group-hover:underline">Full Documentation</span>
+                <ExternalLink className="w-3 h-3 ml-1 group-hover:scale-110 transition-transform" />
+              </Link></li>
+
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-800 dark:border-gray-700 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 dark:text-gray-500 mb-4 md:mb-0">

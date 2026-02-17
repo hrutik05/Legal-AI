@@ -71,7 +71,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <div className="font-semibold text-gray-900 dark:text-white">Location</div>
-                  <div className="text-gray-600 dark:text-gray-300">Mumbai, Maharashtra, India</div>
+                  <div className="text-gray-600 dark:text-gray-300">Pune, Maharashtra, India</div>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@ export default function Contact() {
             <div className="mt-8">
               <h4 className="font-semibold text-gray-900 dark:text-white mb-4">Follow Our Project</h4>
               <div className="flex space-x-4">
-                <a href="#" className="bg-gray-900 text-white p-3 rounded-lg hover:bg-gray-800 transition-colors">
+                <a href="https://github.com/hrutik05/Legal-AI" className="bg-gray-900 text-white p-3 rounded-lg hover:bg-gray-800 transition-colors">
                   <Github className="w-5 h-5" />
                 </a>
                 <a href="#" className="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition-colors">

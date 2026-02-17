@@ -35,8 +35,8 @@ const teamMembers = [
     ],
     skills: ["Tailwand.css", "React.js", "Computer Science", "Java"],
     social: {
-      github: "#",
-      linkedin: "#",
+      github: "https://github.com/hrutik05",
+      linkedin: "https://linkedin.com/in/hrutik27",
       email: "hrutikwakale27@gmail.com" 
     }
   },
@@ -63,7 +63,7 @@ const teamMembers = [
 
 const projectStats = [
   { icon: BookOpen, value: '500+', label: 'Legal Documents Processed' },
-  { icon: Code, value: '10K+', label: 'Lines of Code' },
+  { icon: Code, value: '1000K+', label: 'Lines of Code' },
   { icon: Users, value: '100+', label: 'Beta Testers' },
   { icon: Award, value: '95%', label: 'Accuracy Rate' }
 ];

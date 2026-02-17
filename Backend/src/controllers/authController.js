@@ -1,8 +1,10 @@
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import ChatHistory from '../models/ChatHistory.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { sendPasswordResetEmail, sendPasswordChangedEmail } from '../utils/emailUtils.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'please_change_this';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
@@ -149,5 +151,106 @@ export async function getChatHistory(req, res) {
   } catch (error) {
     logError(error instanceof Error ? error : new Error(String(error)), { action: 'getChatHistory' });
     res.status(500).json({ success: false, message: 'Failed to retrieve chat history.', error: error.message });
+  }
+}
+
+// Forgot password - Generate reset token and send email
+export async function forgotPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    // Validation
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      return res.status(400).json({ error: 'Valid email is required' });
+    }
+
+    // Find user by email
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      // Don't reveal if email exists (security best practice)
+      return res.status(200).json({ message: 'If an account exists with this email, a password reset link has been sent.' });
+    }
+
+    // Generate reset token (32 bytes = 64 hex characters)
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Set token and expiration (1 hour from now)
+    user.resetToken = tokenHash;
+    user.resetTokenExpires = Date.now() + 3600000; // 1 hour
+
+    await user.save();
+
+    // Send password reset email
+    const emailSent = await sendPasswordResetEmail(user.email, resetToken, user.fullName);
+
+    if (!emailSent) {
+      return res.status(500).json({ error: 'Failed to send reset email. Please try again later.' });
+    }
+
+    logInfo('Password reset requested', { email: user.email });
+
+    res.status(200).json({
+      message: 'If an account exists with this email, a password reset link has been sent.'
+    });
+  } catch (err) {
+    logError(err instanceof Error ? err : new Error(String(err)), { action: 'forgotPassword' });
+    res.status(500).json({ error: 'Failed to process password reset request' });
+  }
+}
+
+// Reset password - Validate token and update password
+export async function resetPassword(req, res) {
+  try {
+    const { token, password, passwordConfirm } = req.body;
+
+    // Validation
+    if (!token || !password || !passwordConfirm) {
+      return res.status(400).json({ error: 'Token, password and password confirmation are required' });
+    }
+
+    if (password !== passwordConfirm) {
+      return res.status(400).json({ error: 'Passwords do not match' });
+    }
+
+    if (password.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters and include uppercase, lowercase and number' });
+    }
+
+    // Hash the token to compare with stored hash
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find user with matching token and check expiration
+    const user = await User.findOne({
+      resetToken: tokenHash,
+      resetTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: 'Password reset link is invalid or has expired. Please request a new one.' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Update user
+    user.password = hashedPassword;
+    user.resetToken = null;
+    user.resetTokenExpires = null;
+
+    await user.save();
+
+    // Send confirmation email
+    await sendPasswordChangedEmail(user.email, user.fullName);
+
+    logInfo('Password reset successful', { email: user.email });
+
+    res.status(200).json({
+      message: 'Password has been reset successfully. You can now log in with your new password.'
+    });
+  } catch (err) {
+    logError(err instanceof Error ? err : new Error(String(err)), { action: 'resetPassword' });
+    res.status(500).json({ error: 'Failed to reset password' });
   }
 }
