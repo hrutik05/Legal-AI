@@ -109,9 +109,6 @@ export default function PdfUploader({ setPdfFile, setPdfText }: PdfUploaderProps
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Drag and drop your PDF here or click to browse
           </p>
-          <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">
-            {uploading ? 'Processing...' : 'PDF files only'}
-          </p>
         </div>
 
         {/* Animated border */}
