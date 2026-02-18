@@ -29,14 +29,27 @@ import ProjectInfo from './pages/ProjectInfo';
 import Documentation from './pages/Documentation';
 import NotFound from './pages/NotFound';
 import ServerError from './pages/ServerError';
-import { useToast } from './hooks/useToast';
+import { useToast } from './contexts/ToastContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { useOnlineStatus } from './hooks/useOnlineStatus';
 import PDFVisualizer from './pages/PDFVisualizer';
 
 function App() {
+  // Only responsible for providing context and error boundary
+  return (
+    <ErrorBoundary>
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
+    </ErrorBoundary>
+  );
+}
+
+// Component rendered inside provider so hooks can access context
+const AppContent = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const { toasts, removeToast } = useToast();
   const isOnline = useOnlineStatus();
+  const { toasts, removeToast } = useToast();
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
@@ -52,28 +65,27 @@ function App() {
   };
 
   return (
-    <ErrorBoundary>
-      <Router>
-        <div className="min-h-screen">
-          <SkipLink href="#main-content">Skip to main content</SkipLink>
-          <OfflineIndicator isOnline={isOnline} />
-          <TranslationNotice />
-          
-          <ErrorBoundary fallback={
-            <div className="min-h-screen flex items-center justify-center">
-              <div className="text-center">
-                <h2 className="text-xl font-semibold mb-2">Navigation Error</h2>
-                <p className="text-gray-600 mb-4">There was an issue loading the navigation.</p>
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                >
-                  Reload Page
-                </button>
-              </div>
+    <Router>
+      <div className="min-h-screen">
+        <SkipLink href="#main-content">Skip to main content</SkipLink>
+        <OfflineIndicator isOnline={isOnline} />
+        <TranslationNotice />
+        
+        <ErrorBoundary fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+              <h2 className="text-xl font-semibold mb-2">Navigation Error</h2>
+              <p className="text-gray-600 mb-4">There was an issue loading the navigation.</p>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                Reload Page
+              </button>
             </div>
-          }>
-            <Routes>
+          </div>
+        }>
+          <Routes>
               <Route path="/" element={
                 <ErrorBoundary>
                   <Header onChatToggle={toggleChat} />
@@ -172,8 +184,6 @@ function App() {
           <ToastContainer toasts={toasts} onClose={removeToast} />
         </div>
       </Router>
-    </ErrorBoundary>
   );
 }
-
 export default App;

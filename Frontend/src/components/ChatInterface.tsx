@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { Message, Conversation, ChatHistoryItem, BotResponse } from '../types';
 import { apiClient } from '../utils/apiClient';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../contexts/ToastContext';
 import { useVoiceInput } from '../hooks/useVoiceInput';
 import { useVoiceOutput } from '../hooks/useVoiceOutput';
 import { formatTextForSpeech, truncateForSpeech, cleanResponseText } from '../utils/voiceUtils';

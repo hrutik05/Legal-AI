@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Scale, ChevronDown, User, Settings } from 'lucide-react';
 import DarkModeToggle from './DarkModeToggle';
+import { useToast } from '../contexts/ToastContext';
 
 interface HeaderProps {
   onChatToggle: () => void;
@@ -14,6 +15,7 @@ export default function Header({ onChatToggle }: HeaderProps) {
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -219,6 +221,7 @@ export default function Header({ onChatToggle }: HeaderProps) {
                         onClick={() => {
                           localStorage.removeItem('user');
                           setUser(null);
+                          showSuccess('Logged out','You have been logged out successfully.');
                         }}
                         className="block w-full text-left px-4 py-2 text-red-600 hover:text-red-800 transition-colors"
                       >
@@ -311,6 +314,7 @@ export default function Header({ onChatToggle }: HeaderProps) {
                     onClick={() => {
                       localStorage.removeItem('user');
                       setUser(null);
+                      showSuccess('Logged out','You have been logged out successfully.');
                     }}
                     className="text-red-600 hover:text-red-800 transition-colors"
                   >

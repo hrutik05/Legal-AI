@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const { showSuccess, showError } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +35,12 @@ export default function ForgotPassword() {
 
       if (!response.ok) {
         setError(data.error || 'Failed to send reset email');
+        showError('Error', data.error || 'Failed to send reset email');
         return;
       }
 
       setSuccess(true);
+      showSuccess('Email Sent', 'Password reset link has been sent to your inbox.');
       setEmail('');
       
       // Redirect to login after 3 seconds
@@ -45,6 +49,7 @@ export default function ForgotPassword() {
       }, 3000);
     } catch (err) {
       setError('Failed to send reset email. Please try again later.');
+      showError('Error', 'Failed to send reset email. Please try again later.');
       console.error('Forgot password error:', err);
     } finally {
       setIsLoading(false);

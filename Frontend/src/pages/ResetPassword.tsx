@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Lock, CheckCircle, AlertCircle } from 'lucide-react';
+import { useToast } from '../contexts/ToastContext';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ export default function ResetPassword() {
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const { showSuccess, showError } = useToast();
 
   // Validation requirements
   const passwordRequirements = {
@@ -65,10 +67,12 @@ export default function ResetPassword() {
 
       if (!response.ok) {
         setError(data.error || 'Failed to reset password');
+        showError('Error', data.error || 'Failed to reset password');
         return;
       }
 
       setSuccess(true);
+      showSuccess('Success', 'Your password has been reset.');
       
       // Redirect to login after 3 seconds
       setTimeout(() => {
@@ -76,6 +80,7 @@ export default function ResetPassword() {
       }, 3000);
     } catch (err) {
       setError('Failed to reset password. Please try again later.');
+      showError('Error', 'Failed to reset password. Please try again later.');
       console.error('Reset password error:', err);
     } finally {
       setIsLoading(false);
