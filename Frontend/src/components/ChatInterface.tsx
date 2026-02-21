@@ -225,7 +225,9 @@ function ChatInterface() {
 
     try {
       // Forward the query to Node backend which proxies to Python service
-      const resp = await apiClient.post<BotResponse>('/auth/chatbot/query', { query: content });
+      // append a hint so the model answers using Indian laws only
+      const queryToSend = `${content} (please answer using Indian laws only)`;
+      const resp = await apiClient.post<BotResponse>('/auth/chatbot/query', { query: queryToSend });
 
       // resp.data should contain { answer, citations, disclaimer } (see Python service)
       let botContent = 'Query is outside supported legal domains. This chatbot answers only legal (law-related) queries.';
@@ -676,6 +678,26 @@ function ChatInterface() {
                           ) : (
                             <Volume2 className="w-4 h-4" />
                           )}
+                        </button>
+
+                        {/* Stop Button - explicit stop control to avoid toggle issues */}
+                        <button
+                          onClick={() => {
+                            try {
+                              stopSpeaking();
+                            } catch (e) {
+                              console.error('Error stopping speech:', e);
+                            }
+                            setSpeakingMessageId(null);
+                          }}
+                          title="Stop speaking immediately"
+                          className={`p-2 rounded-lg transition-all ${
+                            copiedMessageId === msg.id
+                              ? ' text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          <X className="w-4 h-4" />
                         </button>
 
                         {/* Copy Button */}

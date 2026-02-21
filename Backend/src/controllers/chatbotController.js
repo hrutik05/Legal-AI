@@ -152,6 +152,11 @@ const LAW_PATTERNS = [
   /\bcase\s+file\b/i,
   /\bdivani\s+case\b/i,               // दिवाणी
   /\bsuit\b/i,
+  /\bnotice\b/i,
+  /\bnotice\s+deed\b/i,
+  /\bnotice\s+file\b/i,
+  /\bnotice\s+to\s+file\b/i,
+  /\bcase\b/i,
 
   // ---- PROPERTY LAW (Marathi typed in English) ----
   /\bjamin\b/i,                        // जमीन
@@ -271,6 +276,7 @@ const LAW_PATTERNS = [
   /\bwrit\b/i,
   /\bpill?\b/i,
   /\bkarvai\b/i,
+  /\babuse \b/i,                   // जनहित याचिका
 
 ];
 // Function to check if query is law-related
@@ -307,8 +313,10 @@ export const chatbotQuery = async (req, res) => {
       return res.status(500).json({ success: false, message: 'AI service not configured' });
     }
 
+    // build a prompt that reminds the model to stick to Indian legal context
+    const prompt = `${query} \n\n--\nPlease respond strictly based on Indian laws when answering the above query.`;
     // ✅ SINGLE GEMINI API CALL - Get the response
-    const result = await model.generateContent(query);
+    const result = await model.generateContent(prompt);
     const answer = result.response.text();
 
     return res.status(200).json({ success: true, data: { answer } });
