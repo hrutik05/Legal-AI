@@ -262,7 +262,7 @@ export default function ProjectInfo() {
                 </div>
                 <div className="bg-purple-50 dark:bg-purple-900/30 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
                   <h4 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">Timeline</h4>
-                  <p className="text-purple-700 dark:text-purple-300 text-sm">6-month development cycle (Aug 2024 - Jan 2025)</p>
+                  <p className="text-purple-700 dark:text-purple-300 text-sm">10-month development cycle (Aug 2025 - june 2026)</p>
                 </div>
               </div>
             </div>

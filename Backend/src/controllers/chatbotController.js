@@ -157,6 +157,7 @@ const LAW_PATTERNS = [
   /\bnotice\s+file\b/i,
   /\bnotice\s+to\s+file\b/i,
   /\bcase\b/i,
+  /\bwhat\b/i,
 
   // ---- PROPERTY LAW (Marathi typed in English) ----
   /\bjamin\b/i,                        // जमीन

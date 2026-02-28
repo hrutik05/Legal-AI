@@ -6,7 +6,18 @@ router = APIRouter(prefix="/ai", tags=["AI"])
 @router.post("/ask")
 async def ask_question(data: dict):
     try:
-        answer = ask_gemini(data["context"], data["question"])
+        context = data.get("context", "") or ""
+        question = data.get("question", "") or ""
+
+        # limit context size to avoid huge payloads and API failures
+        max_len = 150_000  # characters (~20k tokens)
+        if len(context) > max_len:
+            # log truncation
+            logger = __import__('logging').getLogger(__name__)
+            logger.warning(f"Context length {len(context)} exceeds {max_len}, truncating")
+            context = context[:max_len] + "\n...[truncated]"
+
+        answer = ask_gemini(context, question)
         return {"answer": answer}
     except Exception as e:
         return {

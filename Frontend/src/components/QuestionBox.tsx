@@ -22,9 +22,13 @@ export default function QuestionBox({ pdfText, setAnswer }: QuestionBoxProps) {
       setLoading(true);
       setError('');
       const res = await askQuestion(pdfText, question);
+      console.log('PDF Q&A response', res.data);
       
       if (res.data.error) {
-        setError(res.data.error);
+        setError(res.data.error || 'Unknown error from backend');
+        setAnswer('');
+      } else if (!res.data.answer) {
+        setError('No answer returned from server');
         setAnswer('');
       } else {
         setAnswer(res.data.answer);
@@ -66,8 +70,7 @@ export default function QuestionBox({ pdfText, setAnswer }: QuestionBoxProps) {
 
       {error && (
         <div className="p-3 bg-red-100 dark:bg-red-500/20 border border-red-300 dark:border-red-500/50 rounded-lg text-red-700 dark:text-red-200 text-sm flex items-center gap-2">
-          <span>⚠️</span>
-          {error}
+          <span>⚠️ {error}</span>
         </div>
       )}
 

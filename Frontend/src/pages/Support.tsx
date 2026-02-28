@@ -37,7 +37,7 @@ export default function Support() {
         subject: '',
         message: ''
       });
-    } catch (error) {
+    } catch (err) {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -65,7 +65,7 @@ export default function Support() {
       icon: Phone,
       title: 'Phone Support',
       description: 'Speak directly with our team',
-      contact: '+91 98765 43210',
+      contact: '+91 93224 71196',
       responseTime: 'Business hours',
       color: 'purple'
     }

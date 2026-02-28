@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: 'http://localhost:8000',
-  timeout: 30000,
+  timeout: 60000, // increase to 60 sec in case PDF context is large
 });
 
 export const uploadPdf = async (file: File) => {
@@ -36,8 +36,22 @@ export const uploadPdf = async (file: File) => {
   }
 };
 
-export const askQuestion = (context: string, question: string) => {
-  return API.post('/ai/ask', { context, question });
+export const askQuestion = async (context: string, question: string) => {
+  try {
+    const response = await API.post('/ai/ask', { context, question });
+    return response;
+  } catch (error: any) {
+    if (error.response) {
+      console.error('askQuestion backend error:', error.response.data);
+      throw new Error(error.response.data.error || error.response.data.detail || 'Backend error');
+    } else if (error.request) {
+      console.error('askQuestion no response:', error.request);
+      throw new Error('No response from PDF backend');
+    } else {
+      console.error('askQuestion error:', error.message);
+      throw new Error(error.message);
+    }
+  }
 };
 
 export default API;

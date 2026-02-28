@@ -88,16 +88,14 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4 text-white">Project Info</h3>
             <ul className="space-y-2 text-gray-400 dark:text-gray-500">
               <li><a href="#about" className="hover:text-white dark:hover:text-gray-300 transition-colors">About the Project</a></li>
-              <li>
-                <Link
-                  to="/project-info"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center"
-                >
-                  Project Information <ExternalLink className="w-3 h-3 ml-1" />
-                </Link>
-              </li>
+            
+              <li><Link
+                to="/project-info"
+                className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center group"
+              >
+                <span className="group-hover:underline">Project Information</span>
+                <ExternalLink className="w-3 h-3 ml-1 group-hover:scale-110 transition-transform" />
+              </Link></li>
               <li><Link
                 to="/documentation"
                 className="hover:text-white dark:hover:text-gray-300 transition-colors flex items-center group"

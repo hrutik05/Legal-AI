@@ -17,8 +17,10 @@ import {
   Copy,
   Link2,
   Check,
+  FileText,
 } from 'lucide-react';
 import { Message, Conversation, ChatHistoryItem, BotResponse } from '../types';
+import FormattedText from './FormattedText';
 import { apiClient } from '../utils/apiClient';
 import { useToast } from '../contexts/ToastContext';
 import { useVoiceInput } from '../hooks/useVoiceInput';
@@ -372,6 +374,36 @@ function ChatInterface() {
     }
   };
 
+  // Download chat area as PDF
+  const downloadChatAsPdf = async () => {
+    try {
+      const el = document.getElementById('chat-page');
+      if (!el) {
+        showError('Download Failed', 'Chat page element not found');
+        return;
+      }
+
+      // Dynamically import to avoid bundling issues if not installed
+      const { jsPDF } = await import('jspdf');
+      const html2canvas = (await import('html2canvas')).default;
+
+      // Use html2canvas to render the element
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('chat-page.pdf');
+      showSuccess('Downloaded', 'Chat page saved as PDF');
+    } catch (err: any) {
+      console.error('PDF generation error:', err);
+      showError('PDF Error', err?.message || 'Failed to generate PDF');
+    }
+  };
+
   const handleSpeakMessage = (messageId: string, content: string) => {
     if (speakingMessageId === messageId) {
       // If already speaking this message, stop it
@@ -607,6 +639,13 @@ function ChatInterface() {
                 <Settings className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
               </button>
               <button
+                onClick={downloadChatAsPdf}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                title="Download PDF"
+              >
+                <FileText className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
+              </button>
+              <button
                 onClick={() =>
                   setConversations((prev) =>
                     prev.map((c) =>
@@ -627,7 +666,7 @@ function ChatInterface() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-4 py-8">
+          <div id="chat-page" className="max-w-4xl mx-auto px-4 py-8">
             {!activeConversation?.messages.length ? (
               <div className="text-center text-gray-600 py-20">
                 <p>Start a conversation by typing below</p>
@@ -650,13 +689,11 @@ function ChatInterface() {
                       className={`max-w-[80%] px-4 py-3 rounded-2xl ${
                         msg.role === 'user'
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                          : 'bg-white border'
+                          : 'bg-white border text-black'
                       }`}
                     >
                       {msg.role === 'assistant' ? (
-                        <div
-                          dangerouslySetInnerHTML={{ __html: cleanAndParseText(msg.content) }}
-                        />
+                        <FormattedText text={msg.content} />
                       ) : (
                         <p>{msg.content}</p>
                       )}
