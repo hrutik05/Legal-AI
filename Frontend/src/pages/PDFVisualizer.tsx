@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PdfUploader from '../components/PdfUploader.tsx';
@@ -47,8 +47,6 @@ export default function PDFVisualizer() {
                 />
               )}
 
-              {answer && <AnswerBox answer={answer} />}
-
               {!pdfFile && (
                 <div className="rounded-2xl border border-blue-200 dark:border-cyan-500/30 bg-gradient-to-br from-blue-50 dark:from-cyan-500/10 to-purple-50 dark:to-purple-500/10 backdrop-blur-xl p-8 text-center shadow-lg dark:shadow-cyan-500/10">
                   <div className="text-5xl mb-4">🚀</div>
@@ -60,6 +58,12 @@ export default function PDFVisualizer() {
               )}
             </div>
           </div>
+
+          {answer && (
+            <div className="w-full flex justify-center mb-8">
+              <AnswerBox answer={answer} />
+            </div>
+          )}
         </div>
       </main>
 

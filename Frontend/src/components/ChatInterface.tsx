@@ -20,7 +20,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { Message, Conversation, ChatHistoryItem, BotResponse } from '../types';
-import FormattedText from './FormattedText';
+import ChatbotFormattedText from './ChatbotFormattedText';
 import { apiClient } from '../utils/apiClient';
 import { useToast } from '../contexts/ToastContext';
 import { useVoiceInput } from '../hooks/useVoiceInput';
@@ -693,7 +693,7 @@ function ChatInterface() {
                       }`}
                     >
                       {msg.role === 'assistant' ? (
-                        <FormattedText text={msg.content} />
+                        <ChatbotFormattedText text={msg.content} />
                       ) : (
                         <p>{msg.content}</p>
                       )}

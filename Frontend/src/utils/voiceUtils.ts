@@ -69,6 +69,16 @@ export const detectLanguage = (text: string): string => {
 export const cleanResponseText = (text: string): string => {
   let cleaned = text;
 
+  // Normalize line endings first
+  cleaned = cleaned.replace(/\r\n/g, '\n');
+
+  // Convert common inline markdown separators into line breaks
+  cleaned = cleaned.replace(/\s+###\s+/g, '\n### ');
+  cleaned = cleaned.replace(/\s+##\s+/g, '\n## ');
+  cleaned = cleaned.replace(/\s+#\s+/g, '\n# ');
+  cleaned = cleaned.replace(/\s+\*\s+/g, '\n* ');
+  cleaned = cleaned.replace(/\s+(\d+\.\s)/g, '\n$1');
+
   // Remove leading/trailing asterisks that are not markdown
   cleaned = cleaned.replace(/^\*+\s*/, '');
   cleaned = cleaned.replace(/\s*\*+$/, '');
@@ -76,8 +86,8 @@ export const cleanResponseText = (text: string): string => {
   // Replace multiple asterisks with proper formatting
   cleaned = cleaned.replace(/\*{3,}/g, '**'); // Convert *** to **
 
-  // Clean up multiple spaces
-  cleaned = cleaned.replace(/\s{2,}/g, ' ');
+  // Clean up extra spaces while preserving line breaks
+  cleaned = cleaned.replace(/[^\S\n]{2,}/g, ' ');
 
   // Fix spacing around punctuation
   cleaned = cleaned.replace(/\s+([.,!?;:])/g, '$1');
@@ -85,7 +95,7 @@ export const cleanResponseText = (text: string): string => {
 
   // Clean up line breaks
   cleaned = cleaned.trim();
-  cleaned = cleaned.replace(/\n\s*\n/g, '\n\n');
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
 
   return cleaned;
 };
