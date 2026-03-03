@@ -513,7 +513,7 @@ function ChatInterface() {
     });
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Sidebar */}
       <>
         {sidebarOpen && (
@@ -616,15 +616,15 @@ function ChatInterface() {
       </>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col h-screen">
-        <header className="border-b border-gray-200 bg-white">
+      <div className="flex-1 flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+        <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="p-2 hover:bg-gray-100 rounded-lg lg:hidden"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg lg:hidden"
               >
-                <Menu className="w-5 h-5 text-gray-600" />
+                <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 ChatBot-AI Legal Assistant
@@ -633,17 +633,17 @@ function ChatInterface() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setVoiceSettingsOpen(true)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors group"
                 title="Voice settings"
               >
-                <Settings className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
+                <Settings className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-500" />
               </button>
               <button
                 onClick={downloadChatAsPdf}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors group"
                 title="Download PDF"
               >
-                <FileText className="w-5 h-5 text-gray-600 group-hover:text-blue-500" />
+                <FileText className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-500" />
               </button>
               <button
                 onClick={() =>
@@ -655,10 +655,10 @@ function ChatInterface() {
                     )
                   )
                 }
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors group"
                 title="Clear conversation"
               >
-                <Trash2 className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
+                <Trash2 className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-red-500" />
               </button>
             </div>
           </div>
@@ -668,7 +668,7 @@ function ChatInterface() {
         <div className="flex-1 overflow-y-auto">
           <div id="chat-page" className="max-w-4xl mx-auto px-4 py-8">
             {!activeConversation?.messages.length ? (
-              <div className="text-center text-gray-600 py-20">
+              <div className="text-center text-gray-600 dark:text-gray-300 py-20">
                 <p>Start a conversation by typing below</p>
               </div>
             ) : (
@@ -689,7 +689,7 @@ function ChatInterface() {
                       className={`max-w-[80%] px-4 py-3 rounded-2xl ${
                         msg.role === 'user'
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                          : 'bg-white border text-black'
+                          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
                       }`}
                     >
                       {msg.role === 'assistant' ? (
@@ -707,7 +707,7 @@ function ChatInterface() {
                           className={`p-2 rounded-lg transition-all ${
                             speakingMessageId === msg.id
                               ? 'bg-blue-500 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                           }`}
                         >
                           {speakingMessageId === msg.id ? (
@@ -731,7 +731,7 @@ function ChatInterface() {
                           className={`p-2 rounded-lg transition-all ${
                             copiedMessageId === msg.id
                               ? ' text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                           }`}
                         >
                           <X className="w-4 h-4" />
@@ -744,7 +744,7 @@ function ChatInterface() {
                           className={`p-2 rounded-lg transition-all ${
                             copiedMessageId === msg.id
                               ? 'bg-green-500 text-white'
-                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                           }`}
                         >
                           {copiedMessageId === msg.id ? (
@@ -758,7 +758,7 @@ function ChatInterface() {
                         <button
                           onClick={() => handleOpenReference(msg)}
                           title="View references"
-                          className="p-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition-all"
+                          className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
                         >
                           <Link2 className="w-4 h-4" />
                         </button>
@@ -778,15 +778,15 @@ function ChatInterface() {
                 <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
                   <Bot className="w-5 h-5 text-white" />
                 </div>
-                <div className="bg-white border rounded-2xl px-4 py-3">
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
                     <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"
                       style={{ animationDelay: '150ms' }}
                     />
                     <div
-                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"
                       style={{ animationDelay: '300ms' }}
                     />
                   </div>
@@ -798,7 +798,7 @@ function ChatInterface() {
         </div>
 
         {/* Input Box */}
-        <div className="border-t border-gray-200 bg-white">
+        <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <form onSubmit={handleSubmit} className="relative">
               <textarea
@@ -808,8 +808,8 @@ function ChatInterface() {
                 placeholder={isListening ? 'Listening...' : 'Type your message...'}
                 className={`w-full resize-none rounded-2xl border px-4 py-3 pr-24 focus:outline-none focus:ring-2 ${
                   isListening
-                    ? 'border-red-400 bg-red-50 focus:ring-red-500'
-                    : 'border-gray-300 focus:ring-blue-500'
+                    ? 'border-red-400 bg-red-50 dark:bg-red-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-red-500'
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-blue-500'
                 }`}
               />
               
@@ -821,7 +821,7 @@ function ChatInterface() {
                 className={`absolute right-14 bottom-2 p-2 rounded-xl transition-all ${
                   isListening
                     ? 'bg-red-500 text-white hover:bg-red-600'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                 }`}
               >
                 {isListening ? (
