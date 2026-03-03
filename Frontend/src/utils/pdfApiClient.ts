@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://legal-ai-pdf-backend.onrender.com',
+  baseURL: 'http://localhost:8000',
   timeout: 60000, // increase to 60 sec in case PDF context is large
 });
 
@@ -27,7 +27,7 @@ export const uploadPdf = async (file: File) => {
     } else if (error.request) {
       // Request made but no response
       console.error('No response from server:', error.request);
-      throw new Error('No response from server. Make sure PDF backend is running on https://legal-ai-pdf-backend.onrender.com');
+      throw new Error('No response from server. Make sure PDF backend is running on http://localhost:8000');
     } else {
       // Error in request setup
       console.error('Error:', error.message);

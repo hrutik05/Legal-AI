@@ -2,120 +2,136 @@ interface FormattedTextProps {
   text: string;
 }
 
-// This component implements a very small markdown-like parser
-// that covers the constructs currently used by the Gemini responses
-// in this project.  It is intentionally lightweight and does not
-// pull in an external dependency.
-
 export default function FormattedText({ text }: FormattedTextProps) {
   if (!text) return null;
 
-  const stripResidualMarkdown = (value: string) =>
+  const normalizeInput = (value: string) =>
+    value
+      .replace(/\r\n/g, '\n')
+      .replace(/\t/g, ' ')
+      .replace(/\s+###\s+/g, '\n### ')
+      .replace(/\s+##\s+/g, '\n## ')
+      .replace(/\s+#\s+/g, '\n# ')
+      .replace(/\s+[-•*]\s+/g, '\n• ')
+      .replace(/\s+(\d+[.)]\s+)/g, '\n$1')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+
+  const cleanText = (value: string) =>
     value
       .replace(/\*\*(.*?)\*\*/g, '$1')
       .replace(/__(.*?)__/g, '$1')
       .replace(/\*(.*?)\*/g, '$1')
-      .replace(/^#{1,6}\s*/g, '')
+      .replace(/_(.*?)_/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/^#{1,6}\s*/, '')
+      .replace(/\*+/g, '')
       .replace(/\s{2,}/g, ' ')
       .trim();
 
-  const renderInline = (value: string) => {
-    const parts = value.split(/(\*\*.*?\*\*|__.*?__|`[^`]+`|_[^_]+_)/g);
-    return parts.map((part, i) => {
-      if (/^(\*\*|__)/.test(part)) {
-        return (
-          <span key={i} className="font-semibold text-gray-900 dark:text-white">
-            {part.replace(/\*\*|__/g, '')}
-          </span>
-        );
-      }
-      if (/^`[^`]+`$/.test(part)) {
-        return (
-          <code key={i} className="bg-gray-100 dark:bg-gray-800 px-1 rounded font-mono text-gray-900 dark:text-gray-100">
-            {part.slice(1, -1)}
-          </code>
-        );
-      }
-      if (/^_[^_]+_$/.test(part)) {
-        return (
-          <span key={i} className="italic">
-            {part.slice(1, -1)}
-          </span>
-        );
-      }
+  const lines = normalizeInput(text)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
 
-      return <span key={i}>{stripResidualMarkdown(part)}</span>;
-    });
+  const blocks: Array<
+    | { type: 'heading'; value: string }
+    | { type: 'paragraph'; value: string }
+    | { type: 'ul'; items: string[] }
+    | { type: 'ol'; items: string[] }
+  > = [];
+
+  let currentListType: 'ul' | 'ol' | null = null;
+  let currentItems: string[] = [];
+
+  const flushList = () => {
+    if (!currentListType || currentItems.length === 0) return;
+    if (currentListType === 'ul') {
+      blocks.push({ type: 'ul', items: [...currentItems] });
+    } else {
+      blocks.push({ type: 'ol', items: [...currentItems] });
+    }
+    currentListType = null;
+    currentItems = [];
   };
 
-  const renderParagraph = (paragraph: string, idx: number) => {
-    const trimmed = paragraph.trim();
+  for (const rawLine of lines) {
+    const line = cleanText(rawLine);
+    if (!line) continue;
 
-    // code block
-    if (/^```[\s\S]*```$/.test(trimmed)) {
-      const code = trimmed.replace(/^```/, '').replace(/```$/, '');
-      return (
-        <pre
-          key={idx}
-          className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto"
-        >
-          <code className="text-gray-900 dark:text-gray-100">{code}</code>
-        </pre>
-      );
+    if (rawLine.startsWith('#') || /:$/.test(line)) {
+      flushList();
+      blocks.push({ type: 'heading', value: line.replace(/:$/, '') });
+      continue;
     }
 
-    // numbered list
-    if (/^\d+\./.test(trimmed)) {
-      const items = trimmed.split(/\n(?=\d+\.)/);
-      return (
-        <ol key={idx} className="list-decimal list-inside space-y-2 ml-4">
-          {items.map((item, i) => (
-            <li key={i} className="text-gray-900 dark:text-gray-100 leading-relaxed text-justify">
-              {renderInline(stripResidualMarkdown(item.replace(/^\d+\.\s*/, '')))}
-            </li>
-          ))}
-        </ol>
-      );
+    const numbered = line.match(/^\d+[.)]\s+(.+)$/);
+    if (numbered) {
+      if (currentListType !== 'ol') {
+        flushList();
+        currentListType = 'ol';
+      }
+      currentItems.push(cleanText(numbered[1]));
+      continue;
     }
 
-    // bullet list
-    if (/^[-*•]\s/.test(trimmed)) {
-      const items = trimmed.split(/\n(?=[-*•]\s)/);
-      return (
-        <ul key={idx} className="list-disc list-inside space-y-2 ml-4">
-          {items.map((item, i) => (
-            <li key={i} className="text-gray-900 dark:text-gray-100 leading-relaxed text-justify">
-              {renderInline(stripResidualMarkdown(item.replace(/^[-*•]\s*/, '')))}
-            </li>
-          ))}
-        </ul>
-      );
+    const bullet = line.match(/^[-•]\s+(.+)$/);
+    if (bullet) {
+      if (currentListType !== 'ul') {
+        flushList();
+        currentListType = 'ul';
+      }
+      currentItems.push(cleanText(bullet[1]));
+      continue;
     }
 
-    // heading (# or trailing colon)
-    if (trimmed.endsWith(':') || /^#{1,3}\s/.test(trimmed)) {
-      const level = trimmed.match(/^#+/)?.[0].length || 1;
-      const textContent = stripResidualMarkdown(trimmed.replace(/^#+\s*/, '').replace(/:$/, ''));
-      const classes: { [key: number]: string } = {
-        1: 'text-xl font-bold text-gray-900 dark:text-white mt-4 mb-2',
-        2: 'text-lg font-semibold text-gray-900 dark:text-white mt-3 mb-2',
-        3: 'text-base font-semibold text-gray-900 dark:text-white mt-2 mb-1',
-      };
-      return (
-        <h3 key={idx} className={classes[level] || classes[2]}>
-          {textContent}
-        </h3>
-      );
-    }
+    flushList();
+    blocks.push({ type: 'paragraph', value: line });
+  }
 
-    // inline bold/italic/code
-    return (
-      <p key={idx} className="text-gray-900 dark:text-gray-100 leading-relaxed text-base text-justify">
-        {renderInline(stripResidualMarkdown(trimmed))}
-      </p>
-    );
-  };
+  flushList();
 
-  const paragraphs = text.split(/\n\n+/).filter((p) => p.trim());
-  return <>{paragraphs.map(renderParagraph)}</>;
+  return (
+    <div className="space-y-3">
+      {blocks.map((block, index) => {
+        if (block.type === 'heading') {
+          return (
+            <h3 key={index} className="text-lg font-semibold text-gray-900 dark:text-white mt-2 mb-1">
+              {block.value}
+            </h3>
+          );
+        }
+
+        if (block.type === 'ul') {
+          return (
+            <ul key={index} className="list-disc list-inside ml-4 space-y-1">
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="text-gray-900 dark:text-gray-100 leading-relaxed text-justify">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (block.type === 'ol') {
+          return (
+            <ol key={index} className="list-decimal list-inside ml-4 space-y-1">
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex} className="text-gray-900 dark:text-gray-100 leading-relaxed text-justify">
+                  {item}
+                </li>
+              ))}
+            </ol>
+          );
+        }
+
+        return (
+          <p key={index} className="text-gray-900 dark:text-gray-100 leading-relaxed text-base text-justify">
+            {block.value}
+          </p>
+        );
+      })}
+    </div>
+  );
 }

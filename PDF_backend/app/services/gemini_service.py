@@ -1,9 +1,41 @@
 import requests
-from app.config import GEMINI_API_KEY
+from app.config import (
+    GEMINI_API_KEY,
+    GEMINI_MODEL,
+    GEMINI_FALLBACK_MODELS,
+    GEMINI_TIMEOUT_SECONDS,
+)
 
-URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
+
+
+def _build_url(model_name: str) -> str:
+    return f"{API_BASE_URL}/{model_name}:generateContent"
+
+
+def _extract_error_message(response: requests.Response) -> str:
+    try:
+        body = response.json()
+    except Exception:
+        body = None
+
+    if isinstance(body, dict) and "error" in body:
+        error = body.get("error") or {}
+        code = error.get("code")
+        status = error.get("status")
+        message = error.get("message", "Unknown Gemini API error")
+        return f"Gemini API Error ({code}, {status}): {message}"
+
+    text_preview = (response.text or "").strip()
+    if text_preview:
+        return f"Gemini API Error ({response.status_code}): {text_preview[:500]}"
+
+    return f"Gemini API Error ({response.status_code})"
 
 def ask_gemini(context, question):
+    if not GEMINI_API_KEY:
+        raise Exception("GEMINI_API_KEY is missing in environment")
+
     payload = {
         "contents": [{
             "parts": [{
@@ -26,28 +58,44 @@ QUESTION:
         "X-goog-api-key": GEMINI_API_KEY
     }
 
-    try:
-        res = requests.post(URL, json=payload, headers=headers)
-        res.raise_for_status()
-        
-        response_data = res.json()
-        
-        if "error" in response_data:
-            error_msg = response_data["error"].get("message", "Unknown error")
-            raise Exception(f"API Error: {error_msg}")
-        
-        if "candidates" not in response_data:
-            raise Exception(f"Invalid API response: Missing 'candidates'. Response: {response_data}")
-        
-        if not response_data["candidates"]:
-            raise Exception("API returned empty candidates list")
-        
-        answer = response_data["candidates"][0]["content"]["parts"][0]["text"]
-        return answer
-        
-    except requests.exceptions.RequestException as e:
-        raise Exception(f"Request failed: {str(e)}")
-    except (KeyError, IndexError) as e:
-        raise Exception(f"Failed to parse API response: {str(e)}")
-    except Exception as e:
-        raise Exception(f"Error from Gemini API: {str(e)}")
+    models_to_try = [GEMINI_MODEL] + [m for m in GEMINI_FALLBACK_MODELS if m != GEMINI_MODEL]
+    last_error = "Unknown Gemini API error"
+
+    for model_name in models_to_try:
+        try:
+            response = requests.post(
+                _build_url(model_name),
+                json=payload,
+                headers=headers,
+                timeout=GEMINI_TIMEOUT_SECONDS,
+            )
+
+            if response.status_code >= 400:
+                last_error = _extract_error_message(response)
+                continue
+
+            response_data = response.json()
+
+            if "error" in response_data:
+                api_error = response_data["error"].get("message", "Unknown Gemini API error")
+                last_error = f"Gemini API Error: {api_error}"
+                continue
+
+            candidates = response_data.get("candidates") or []
+            if not candidates:
+                last_error = f"No candidates returned for model '{model_name}'"
+                continue
+
+            parts = ((candidates[0].get("content") or {}).get("parts") or [])
+            if not parts or "text" not in parts[0]:
+                last_error = f"Invalid response format for model '{model_name}'"
+                continue
+
+            return parts[0]["text"]
+
+        except requests.exceptions.RequestException as exc:
+            last_error = f"Request failed for model '{model_name}': {exc}"
+        except Exception as exc:
+            last_error = f"Error for model '{model_name}': {exc}"
+
+    raise Exception(last_error)
