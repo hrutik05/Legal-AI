@@ -60,3 +60,8 @@ GEMINI_API_KEY=your_gemini_api_key_here
 uvicorn app.main:app --reload
 ```
   
+### 📘 Documentation
+[![SRS Report]](/SRS_Report[1].pdf)
+[![Final Synopsis]](/final%20synopsis.pdf)
+[![Sem 7 Report]](/FINAL_REPORT_STAGE_1.pdf)
+[![Research Paper]](/Research_paper.pdf)
