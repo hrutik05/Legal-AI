@@ -1,6 +1,14 @@
-import React, { useEffect } from 'react';
-import { ArrowLeft, BookOpen, Users, Zap, Code, Loader as Roadmap, ExternalLink, CheckCircle, AlertCircle, Info, Target, Smartphone, Globe, Shield, Database, Clock } from 'lucide-react';
+import { useEffect } from 'react';
+import { ArrowLeft, BookOpen, Users, Zap, Code, Loader as Roadmap, CheckCircle, Info, Target, Smartphone, Globe, Shield, Database } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import methodologyDiagram from '../images/Methodology (1).png';
+import chatbotSystemDiagram from '../images/chatbot system .png';
+import erDiagram from '../images/IR Diagram.png';
+import flowDiagram from '../images/flowchat.png';
+import componentArchitectureDiagram from '../images/Component Architecture.png';
+import umlStateDiagram from '../images/UML Satate Diagram.png';
+import umlSequenceDiagram from '../images/UML Sequence Diagram.png';
+import ganttChartDiagram from '../images/Gantt_Chart_Legal_Chatbot.png';
 
 export default function Documentation() {
   useEffect(() => {
@@ -36,7 +44,7 @@ export default function Documentation() {
               </div>
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              Version 1.0 | Last Updated: Augest 2025
+              Version 2.5 | Last Updated: March 2026
             </div>
           </div>
         </div>
@@ -459,7 +467,8 @@ export default function Documentation() {
                         { name: 'Constitutional Law', icon: '⚖️', desc: 'Fundamental rights, DPSP' },
                         { name: 'Criminal Law', icon: '🛡️', desc: 'IPC, CrPC, Evidence Act' },
                         { name: 'Civil Law', icon: '📄', desc: 'CPC, Contract Act, Torts' },
-                        { name: 'Family Law', icon: '❤️', desc: 'Marriage, Divorce, Adoption' }
+                        { name: 'Family Law', icon: '❤️', desc: 'Marriage, Divorce, Adoption' },
+                        
                       ].map((area, index) => (
                         <div key={index} className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg text-center">
                           <div className="text-2xl mb-2">{area.icon}</div>
@@ -587,6 +596,108 @@ export default function Documentation() {
                           </div>
                         </div>
                       </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">System Diagrams</h3>
+
+                    <div className="space-y-8">
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AI Chatbot Development Methodology</h4>
+                        <img src={methodologyDiagram} alt="AI Chatbot Development Methodology" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This diagram illustrates the complete development lifecycle of the LegalAI chatbot, from requirement gathering and data collection through model selection, knowledge base integration, training, security implementation, deployment, and continuous improvement.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AI Legal Chatbot System</h4>
+                        <img src={chatbotSystemDiagram} alt="AI Legal Chatbot System" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This use case diagram shows the various interactions users can have with the LegalAI system, including asking legal questions, retrieving answers, selecting languages, viewing FAQs, generating documents, and providing feedback. The system integrates with the Legal Database and Translator Service for comprehensive legal assistance.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Database Entity Relationship Diagram</h4>
+                        <img src={erDiagram} alt="Database Entity Relationship Diagram" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This ER diagram displays the comprehensive database structure, showing relationships between Users, Queries, Responses, Feedback, and Legal Information entities. It demonstrates how user data flows through the system and connects to legal knowledge bases and response generation.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Query Processing Flow Diagram</h4>
+                        <img src={flowDiagram} alt="Query Processing Flow Diagram" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This flow diagram illustrates the complete journey of a user query through the LegalAI system: from user input acceptance, query processing, knowledge base retrieval, AI response generation, formatting and translation, to final delivery and logging. It shows all the key processing stages and system components involved.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Component Architecture Diagram</h4>
+                        <img src={componentArchitectureDiagram} alt="Component Architecture Diagram" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This comprehensive architecture diagram shows all layers of the LegalAI system: the Presentation Layer with user interface components (text input, voice input, multilingual input), the Application Layer with API Gateway and NLP engine for intent detection and entity recognition, the Data Layer with knowledge base and external legal APIs (IndiaCode, LawRato, eCourts), and the Support Layer for logging, analytics, translation, and text-to-speech services.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">UML State Diagram</h4>
+                        <img src={umlStateDiagram} alt="UML State Diagram" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This state diagram illustrates the different states of the chatbot system during the user interaction lifecycle. It shows the Input Phase (waiting for user input), Processing Phase (processing the question and generating answers), and Output Phase (showing the answer to the user), along with transitions between states and actions that trigger state changes.
+                        </p>
+                      </div>
+
+                      <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">UML Sequence Diagram</h4>
+                        <img src={umlSequenceDiagram} alt="UML Sequence Diagram" className="w-full h-auto rounded-lg" />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                          This sequence diagram details the interactions between system components during a complete legal query flow. It shows the sequence of operations from user authentication through the Chatbot and NLP Engine, querying the Knowledge Base and Legal Database APIs, generating responses, and formatting/translating the final answer back to the user.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Project Timeline & Gantt Chart</h3>
+                    <div className="bg-white dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                      <img src={ganttChartDiagram} alt="Gantt Chart - AI Chatbot for Legal Advice Based on Indian Laws" className="w-full h-auto rounded-lg" />
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                        This Gantt chart maps out the complete project timeline from July 2025 to March 2026, showing all major phases and their durations:
+                      </p>
+                      <ul className="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-green-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Requirement Analysis (Jul-Aug 2025):</strong> Initial project planning and requirements gathering</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-blue-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Design, Architecture & Research (Aug-Sep 2025):</strong> System design and technical architecture planning</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-yellow-500 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Frontend GUI (Sep-Oct 2025):</strong> User interface development using React and Tailwind CSS</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-purple-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>NLP Setup & Backend Design (Oct-Nov 2025):</strong> NLP engine setup and backend API development</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-red-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Testing (Nov 2025):</strong> Comprehensive testing including unit, integration, and user acceptance testing</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-orange-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Improvement (Dec 2025-Jan 2026):</strong> Bug fixes, optimizations, and feature enhancements</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <div className="w-2 h-2 bg-teal-600 rounded-full mt-1.5 flex-shrink-0"></div>
+                          <span><strong>Deployment (Jan-Mar 2026):</strong> Production deployment and post-launch monitoring</span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
 
@@ -791,21 +902,47 @@ export default function Documentation() {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Timeline for Upcoming Releases</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Timeline for Completed & Upcoming Releases</h3>
                     <div className="relative">
                       <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
                       <div className="space-y-6">
                         {[
-                          { date: 'March 2026', title: 'Voice Interface Beta', status: 'upcoming' },
-                          { date: 'June 2026', title: 'Document Analysis Feature', status: 'upcoming' },
-                          { date: 'September 2026', title: 'Mobile App Launch', status: 'upcoming' },
-                          { date: 'December 2026', title: 'API Platform Release', status: 'planned' },
-                          { date: 'Q2 2027', title: 'International Expansion', status: 'planned' }
-                        ].map((milestone, index) => (
+                          { date: 'July 2025', title: 'Requirement Analysis For Project', status: 'Completed' },
+                          { date: 'Augest 2025', title: 'Design Architecture And Research', status: 'Completed' },
+                          { date: 'September 2025', title: 'Frontend Development', status: 'Completed' },
+                          { date: 'November 2025', title: 'NLP Setup And Backend Development', status: 'Completed' },
+                          { date: 'December 2025', title: 'API And Database Setup', status: 'Completed' },
+                          { date: 'January 2026', title: 'Voice Interface Development', status: 'Completed' },
+                          { date: 'February 2026', title: 'Governement Approval Strong API And Database', status: 'Completed' },
+                          { date: 'February 2026', title: 'Document Analysis Development', status: 'Completed' },
+                          { date: 'March 2026', title: 'Testing', status: 'Completed' },
+                          { date: 'March 2026', title: 'Deployment', status: 'Completed' },
+                          { date: 'Q2 2026', title: 'Mobile App Development', status: 'upcoming' },
+                          { date: 'Q2 2026', title: 'API Platform', status: 'upcoming' },
+                          { date: 'Q2 2026', title: 'International Expansion', status: 'planned' }
+                        ].map((milestone, index) => {
+                          const normalizedStatus = milestone.status.toLowerCase();
+                          const milestoneColorClass =
+                            normalizedStatus === 'completed'
+                              ? 'bg-green-600'
+                              : normalizedStatus === 'planned'
+                                ? 'bg-purple-600'
+                                : normalizedStatus === 'upcoming'
+                                  ? 'bg-blue-600'
+                                  : 'bg-gray-400';
+
+                          const badgeColorClass =
+                            normalizedStatus === 'completed'
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                              : normalizedStatus === 'planned'
+                                ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+                                : normalizedStatus === 'upcoming'
+                                  ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                                  : 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300';
+
+                          return (
                           <div key={index} className="relative flex items-center space-x-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                              milestone.status === 'upcoming' ? 'bg-blue-600' : 'bg-gray-400'
-                            }`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${milestoneColorClass}`}>
                               {index + 1}
                             </div>
                             <div className="flex-1 bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
@@ -814,17 +951,13 @@ export default function Documentation() {
                                   <h4 className="font-semibold text-gray-900 dark:text-white">{milestone.title}</h4>
                                   <p className="text-sm text-gray-600 dark:text-gray-400">{milestone.date}</p>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  milestone.status === 'upcoming' 
-                                    ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' 
-                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-300'
-                                }`}>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${badgeColorClass}`}>
                                   {milestone.status}
                                 </span>
                               </div>
                             </div>
                           </div>
-                        ))}
+                        )})}
                       </div>
                     </div>
                   </div>

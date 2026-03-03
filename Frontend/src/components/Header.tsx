@@ -33,7 +33,8 @@ export default function Header({ onChatToggle }: HeaderProps) {
   };
 
   const handlePdfVisualizerClick = () => {
-    window.open('/pdf-visualizer', '_blank');
+    navigate('/pdf-visualizer');
+    // window.open('/pdf-visualizer', '_blank');
   };
 
   // ✅ FIX: Handle scroll to sections on home page
