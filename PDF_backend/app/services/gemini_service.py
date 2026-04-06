@@ -32,23 +32,12 @@ def _extract_error_message(response: requests.Response) -> str:
 
     return f"Gemini API Error ({response.status_code})"
 
-def ask_gemini(context, question):
-    if not GEMINI_API_KEY:
-        raise Exception("GEMINI_API_KEY is missing in environment")
 
+def _generate_with_models(prompt_text: str) -> str:
     payload = {
         "contents": [{
             "parts": [{
-                "text": f"""
-You are a legal assistant.
-Answer only from the given PDF content.
-
-PDF CONTENT:
-{context}
-
-QUESTION:
-{question}
-"""
+                "text": prompt_text
             }]
         }]
     }
@@ -99,3 +88,42 @@ QUESTION:
             last_error = f"Error for model '{model_name}': {exc}"
 
     raise Exception(last_error)
+
+def ask_gemini(context, question):
+    if not GEMINI_API_KEY:
+        raise Exception("GEMINI_API_KEY is missing in environment")
+
+    prompt_text = f"""
+You are a legal assistant.
+Answer only from the given PDF content.
+
+PDF CONTENT:
+{context}
+
+QUESTION:
+{question}
+"""
+
+    return _generate_with_models(prompt_text)
+
+
+def summarize_pdf(context: str) -> str:
+    if not GEMINI_API_KEY:
+        raise Exception("GEMINI_API_KEY is missing in environment")
+
+    prompt_text = f"""
+You are a legal assistant.
+Summarize the provided PDF content in clear and simple language.
+Keep the response focused on the document itself.
+
+Return output in this structure:
+1. Overview
+2. Key points
+3. Important legal sections/references (if present)
+4. Actionable notes (if any)
+
+PDF CONTENT:
+{context}
+"""
+
+    return _generate_with_models(prompt_text)

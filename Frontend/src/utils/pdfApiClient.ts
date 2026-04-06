@@ -9,7 +9,7 @@ export const uploadPdf = async (file: File) => {
   try {
     const formData = new FormData();
     formData.append('file', file);
-    
+
     // ✅ FIX: DO NOT set Content-Type header for FormData
     // Axios will automatically set it with the correct boundary
     const response = await API.post('/pdf/upload', formData);
@@ -49,6 +49,24 @@ export const askQuestion = async (context: string, question: string) => {
       throw new Error('No response from PDF backend');
     } else {
       console.error('askQuestion error:', error.message);
+      throw new Error(error.message);
+    }
+  }
+};
+
+export const summarizePdf = async (context: string) => {
+  try {
+    const response = await API.post('/ai/summarize', { context });
+    return response;
+  } catch (error: any) {
+    if (error.response) {
+      console.error('summarizePdf backend error:', error.response.data);
+      throw new Error(error.response.data.error || error.response.data.detail || 'Backend error');
+    } else if (error.request) {
+      console.error('summarizePdf no response:', error.request);
+      throw new Error('No response from PDF backend');
+    } else {
+      console.error('summarizePdf error:', error.message);
       throw new Error(error.message);
     }
   }

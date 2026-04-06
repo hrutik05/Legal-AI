@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.services.gemini_service import ask_gemini
+from app.services.gemini_service import ask_gemini, summarize_pdf
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
@@ -7,7 +7,7 @@ router = APIRouter(prefix="/ai", tags=["AI"])
 async def ask_question(data: dict):
     try:
         context = data.get("context", "") or ""
-        question = data.get("question", "") or ""
+        question = data.get("question", "") or "Summarize this PDF"
 
         # limit context size to avoid huge payloads and API failures
         max_len = 150_000  # characters (~20k tokens)
@@ -23,4 +23,30 @@ async def ask_question(data: dict):
         return {
             "error": str(e),
             "answer": None
+        }
+
+
+@router.post("/summarize")
+async def summarize_document(data: dict):
+    try:
+        context = data.get("context", "") or ""
+
+        if not context.strip():
+            return {
+                "error": "PDF content is required for summarization",
+                "summary": None
+            }
+
+        max_len = 150_000
+        if len(context) > max_len:
+            logger = __import__('logging').getLogger(__name__)
+            logger.warning(f"Context length {len(context)} exceeds {max_len}, truncating")
+            context = context[:max_len] + "\n...[truncated]"
+
+        summary = summarize_pdf(context)
+        return {"summary": summary}
+    except Exception as e:
+        return {
+            "error": str(e),
+            "summary": None
         }
