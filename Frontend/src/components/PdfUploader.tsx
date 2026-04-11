@@ -5,9 +5,10 @@ import { Upload } from 'lucide-react';
 interface PdfUploaderProps {
   setPdfFile: (file: string) => void;
   setPdfText: (text: string) => void;
+  onUploadStart?: () => void;
 }
 
-export default function PdfUploader({ setPdfFile, setPdfText }: PdfUploaderProps) {
+export default function PdfUploader({ setPdfFile, setPdfText, onUploadStart }: PdfUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string>('');
@@ -27,14 +28,15 @@ export default function PdfUploader({ setPdfFile, setPdfText }: PdfUploaderProps
 
       setError('');
       setUploading(true);
-      
+      onUploadStart?.();
+
       // Use blob URL for viewing
       const blobUrl = URL.createObjectURL(file);
       setPdfFile(blobUrl);
 
       // Upload to backend
       const res = await uploadPdf(file);
-      
+
       // ✅ FIX: Better response validation
       if (res.data && res.data.text && res.data.text.trim() !== '') {
         setPdfText(res.data.text);
@@ -81,8 +83,8 @@ export default function PdfUploader({ setPdfFile, setPdfText }: PdfUploaderProps
         className={`
           group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed 
           transition-all duration-300 cursor-pointer p-8
-          ${isDragging 
-            ? 'border-blue-500 bg-blue-100 dark:bg-blue-500/20 scale-105 dark:border-cyan-400' 
+          ${isDragging
+            ? 'border-blue-500 bg-blue-100 dark:bg-blue-500/20 scale-105 dark:border-cyan-400'
             : 'border-gray-300 dark:border-purple-500/50 bg-gray-50 dark:bg-gradient-to-br dark:from-slate-800/50 dark:to-slate-900/50 hover:border-blue-400 dark:hover:border-purple-400/80'
           }
         `}
@@ -98,7 +100,7 @@ export default function PdfUploader({ setPdfFile, setPdfText }: PdfUploaderProps
           className="hidden"
           aria-label="Upload PDF"
         />
-        
+
         <div className="text-center">
           <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">
             {uploading ? '📤' : '📁'}

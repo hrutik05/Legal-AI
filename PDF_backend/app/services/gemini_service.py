@@ -1,4 +1,6 @@
 import requests
+import re
+from collections import Counter
 from app.config import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
@@ -127,3 +129,82 @@ PDF CONTENT:
 """
 
     return _generate_with_models(prompt_text)
+
+
+def build_document_analysis(context: str, summary: str) -> dict:
+    """
+    Build lightweight analytics from extracted PDF text and generated summary.
+    This keeps analysis deterministic and fast while still providing meaningful project metrics.
+    """
+    words = re.findall(r"\b\w+\b", context.lower())
+    summary_words = re.findall(r"\b\w+\b", summary.lower())
+
+    total_words = len(words)
+    total_chars = len(context)
+    summary_word_count = len(summary_words)
+
+    # Percentage of original content represented by summary word count.
+    summary_coverage_percent = round(
+        (summary_word_count / total_words) * 100, 2
+    ) if total_words else 0.0
+
+    # Compression percentage communicates how much shorter the summary is.
+    compression_percent = round(max(0.0, 100 - summary_coverage_percent), 2)
+
+    legal_keywords = [
+        "act", "section", "article", "court", "judge", "appeal", "petition", "plaintiff",
+        "defendant", "evidence", "offence", "liability", "contract", "writ", "constitutional",
+        "ipc", "crpc", "civil", "criminal", "statute", "tribunal", "clause", "provision", "law"
+    ]
+
+    keyword_counter = Counter(words)
+    legal_hits = sum(keyword_counter.get(keyword, 0) for keyword in legal_keywords)
+    legal_density = (legal_hits / total_words) if total_words else 0.0
+
+    # Convert density to a bounded percent score for easy UI interpretation.
+    legal_relevance_percent = round(min(100.0, legal_density * 1200), 2)
+
+    heading_markers = len(re.findall(r"\n\s*([A-Z][A-Za-z\s]{3,}|\d+\.)\s*\n", context))
+    structure_score_percent = round(min(100.0, heading_markers * 6 + 30), 2) if total_words else 0.0
+
+    risk_terms = ["penalty", "imprisonment", "fine", "termination", "breach", "liability", "damages"]
+    risk_term_hits = sum(keyword_counter.get(term, 0) for term in risk_terms)
+    risk_intensity_percent = round(min(100.0, (risk_term_hits / max(1, total_words)) * 3000), 2)
+
+    top_keywords = [
+        token for token, count in keyword_counter.most_common(15)
+        if len(token) > 3 and count > 1
+    ][:5]
+
+    estimated_reading_minutes = max(1, round(total_words / 220))
+
+    important_factors = [
+        {
+            "name": "Legal Relevance",
+            "score_percent": legal_relevance_percent,
+            "description": "How strongly the document matches legal-domain language and references."
+        },
+        {
+            "name": "Document Structure",
+            "score_percent": structure_score_percent,
+            "description": "Estimated clarity based on heading/section marker patterns."
+        },
+        {
+            "name": "Risk Intensity",
+            "score_percent": risk_intensity_percent,
+            "description": "Presence of risk-related legal terms such as penalty, breach, or damages."
+        },
+    ]
+
+    return {
+        "summary_coverage_percent": summary_coverage_percent,
+        "compression_percent": compression_percent,
+        "legal_relevance_percent": legal_relevance_percent,
+        "document_stats": {
+            "word_count": total_words,
+            "character_count": total_chars,
+            "estimated_reading_minutes": estimated_reading_minutes,
+        },
+        "top_keywords": top_keywords,
+        "important_factors": important_factors,
+    }

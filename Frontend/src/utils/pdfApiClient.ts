@@ -1,9 +1,16 @@
 import axios from 'axios';
+import type { PdfAnalysis } from '../types';
 
 const API = axios.create({
   baseURL: 'https://legal-ai-pdf-backend.onrender.com',
   timeout: 60000, // increase to 60 sec in case PDF context is large
 });
+
+export interface SummarizeResponse {
+  summary: string | null;
+  analysis: PdfAnalysis | null;
+  error?: string;
+}
 
 export const uploadPdf = async (file: File) => {
   try {
@@ -56,7 +63,7 @@ export const askQuestion = async (context: string, question: string) => {
 
 export const summarizePdf = async (context: string) => {
   try {
-    const response = await API.post('/ai/summarize', { context });
+    const response = await API.post<SummarizeResponse>('/ai/summarize', { context });
     return response;
   } catch (error: any) {
     if (error.response) {

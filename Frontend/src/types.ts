@@ -46,3 +46,24 @@ export interface VoiceSettings {
   voiceIndex: number;
   language: string;
 }
+
+export interface ImportantFactor {
+  name: string;
+  score_percent: number;
+  description: string;
+}
+
+export interface PdfDocumentStats {
+  word_count: number;
+  character_count: number;
+  estimated_reading_minutes: number;
+}
+
+export interface PdfAnalysis {
+  summary_coverage_percent: number;
+  compression_percent: number;
+  legal_relevance_percent: number;
+  document_stats: PdfDocumentStats;
+  top_keywords: string[];
+  important_factors: ImportantFactor[];
+}

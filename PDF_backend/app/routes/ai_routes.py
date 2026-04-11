@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.services.gemini_service import ask_gemini, summarize_pdf
+from app.services.gemini_service import ask_gemini, summarize_pdf, build_document_analysis
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
@@ -44,9 +44,15 @@ async def summarize_document(data: dict):
             context = context[:max_len] + "\n...[truncated]"
 
         summary = summarize_pdf(context)
-        return {"summary": summary}
+        analysis = build_document_analysis(context, summary)
+
+        return {
+            "summary": summary,
+            "analysis": analysis
+        }
     except Exception as e:
         return {
             "error": str(e),
-            "summary": None
+            "summary": None,
+            "analysis": None
         }

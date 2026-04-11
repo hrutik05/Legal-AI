@@ -801,7 +801,7 @@ export default function Documentation() {
                       The LegalAI project has received recognition from national and international academic institutions through various certificates and awards. These recognitions validate our approach to developing an AI-powered legal assistance system for Indian laws.
                     </p>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="space-y-8">
                       {/* Certificate 1 */}
                       <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 p-6 rounded-lg border border-orange-200 dark:border-orange-700">
                         <div className="mb-4">

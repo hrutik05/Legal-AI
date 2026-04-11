@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { summarizePdf } from '../utils/pdfApiClient.ts';
 import { Send } from 'lucide-react';
+import type { PdfAnalysis } from '../types';
 
 interface QuestionBoxProps {
   pdfText: string;
   setAnswer: (answer: string) => void;
+  setAnalysis: (analysis: PdfAnalysis | null) => void;
 }
 
-export default function QuestionBox({ pdfText, setAnswer }: QuestionBoxProps) {
+export default function QuestionBox({ pdfText, setAnswer, setAnalysis }: QuestionBoxProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
@@ -21,15 +23,19 @@ export default function QuestionBox({ pdfText, setAnswer }: QuestionBoxProps) {
       if (res.data.error) {
         setError(res.data.error || 'Unknown error from backend');
         setAnswer('');
+        setAnalysis(null);
       } else if (!res.data.summary) {
         setError('No summary returned from server');
         setAnswer('');
+        setAnalysis(null);
       } else {
         setAnswer(res.data.summary);
+        setAnalysis(res.data.analysis || null);
       }
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to summarize: ' + (err.message || 'Unknown error'));
       setAnswer('');
+      setAnalysis(null);
     } finally {
       setLoading(false);
     }

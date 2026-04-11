@@ -5,16 +5,23 @@ import PdfUploader from '../components/PdfUploader.tsx';
 import PdfViewer from '../components/PdfViewer.tsx';
 import QuestionBox from '../components/QuestionBox.tsx';
 import AnswerBox from '../components/AnswerBox.tsx';
+import type { PdfAnalysis } from '../types';
 
 export default function PDFVisualizer() {
   const [pdfFile, setPdfFile] = useState<string | null>(null);
   const [pdfText, setPdfText] = useState<string>('');
   const [answer, setAnswer] = useState<string>('');
+  const [analysis, setAnalysis] = useState<PdfAnalysis | null>(null);
+
+  const handleUploadStart = () => {
+    setAnswer('');
+    setAnalysis(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      <Header onChatToggle={() => {}} />
-      
+      <Header onChatToggle={() => { }} />
+
       <main id="main-content" className="pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header Section */}
@@ -34,6 +41,7 @@ export default function PDFVisualizer() {
               <PdfUploader
                 setPdfFile={setPdfFile}
                 setPdfText={setPdfText}
+                onUploadStart={handleUploadStart}
               />
               {pdfFile && <PdfViewer file={pdfFile} />}
             </div>
@@ -44,6 +52,7 @@ export default function PDFVisualizer() {
                 <QuestionBox
                   pdfText={pdfText}
                   setAnswer={setAnswer}
+                  setAnalysis={setAnalysis}
                 />
               )}
 
@@ -61,7 +70,7 @@ export default function PDFVisualizer() {
 
           {answer && (
             <div className="w-full flex justify-center mb-8">
-              <AnswerBox answer={answer} />
+              <AnswerBox answer={answer} analysis={analysis} />
             </div>
           )}
         </div>
