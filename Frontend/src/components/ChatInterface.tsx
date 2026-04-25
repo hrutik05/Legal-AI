@@ -29,6 +29,44 @@ import { formatTextForSpeech, truncateForSpeech, cleanResponseText } from '../ut
 import { copyToClipboard, formatTextForCopy } from '../utils/copyUtils';
 import { VoiceSettings } from './VoiceSettings';
 import { ReferenceModal } from './ReferenceModal';
+import { useTypewriter } from '../hooks/useTypewriter';
+
+interface AssistantMessageContentProps {
+  text: string;
+  animate: boolean;
+  onDone?: () => void;
+}
+
+function AssistantMessageContent({ text, animate, onDone }: AssistantMessageContentProps) {
+  const { typedText, isTyping } = useTypewriter(text, {
+    enabled: animate,
+    speed: 12,
+  });
+  const completionNotifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (!animate) {
+      completionNotifiedRef.current = false;
+      return;
+    }
+
+    if (!isTyping && !completionNotifiedRef.current) {
+      completionNotifiedRef.current = true;
+      onDone?.();
+    }
+  }, [animate, isTyping, onDone]);
+
+  const visibleText = animate ? typedText : text;
+
+  return (
+    <>
+      <ChatbotFormattedText text={visibleText} />
+      {animate && isTyping && (
+        <span className="inline-block w-2 ml-1 align-middle animate-pulse text-blue-500">|</span>
+      )}
+    </>
+  );
+}
 
 function ChatInterface() {
   const [conversations, setConversations] = useState<Conversation[]>([
@@ -45,6 +83,7 @@ function ChatInterface() {
   const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<ChatHistoryItem[]>([]);
   const [voiceSettingsOpen, setVoiceSettingsOpen] = useState(false);
+  const [animatingMessageId, setAnimatingMessageId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -95,8 +134,8 @@ function ChatInterface() {
         const payload: ChatHistoryItem[] = Array.isArray(raw)
           ? (raw as ChatHistoryItem[])
           : (typeof raw === 'object' && raw !== null && Array.isArray((raw as Record<string, unknown>)['data']))
-          ? ((raw as Record<string, unknown>)['data'] as ChatHistoryItem[])
-          : [];
+            ? ((raw as Record<string, unknown>)['data'] as ChatHistoryItem[])
+            : [];
         setHistory(payload);
       }
     } catch (err) {
@@ -110,7 +149,7 @@ function ChatInterface() {
 
     // Optimistically remove item from UI first
     setHistory((prev) => prev.filter((_, i) => i !== idx));
-    
+
     try {
       const user = localStorage.getItem('user');
       if (!user) return;
@@ -197,7 +236,7 @@ function ChatInterface() {
     }
   }, [isSpeaking, speakingMessageId]);
 
-  
+
 
   const handleSendMessage = async (content: string) => {
     const userMessage: Message = {
@@ -244,8 +283,8 @@ function ChatInterface() {
           inner = (body as Record<string, unknown>)['data'];
         }
 
-        if (typeof inner === 'object' && inner !== null && typeof (inner as {answer?: string}).answer === 'string') {
-          botContent = (inner as {answer: string}).answer;
+        if (typeof inner === 'object' && inner !== null && typeof (inner as { answer?: string }).answer === 'string') {
+          botContent = (inner as { answer: string }).answer;
         } else if (typeof body === 'string') {
           botContent = body;
         } else {
@@ -280,6 +319,7 @@ function ChatInterface() {
           return conv;
         })
       );
+      setAnimatingMessageId(botMessage.id);
 
       // Persist Q/A to backend chat history (if user logged in)
       (async () => {
@@ -325,6 +365,7 @@ function ChatInterface() {
           return conv;
         })
       );
+      setAnimatingMessageId(botMessage.id);
     } finally {
       setIsTyping(false);
     }
@@ -416,11 +457,11 @@ function ChatInterface() {
         return;
       }
       setSpeakingMessageId(messageId);
-      
+
       // Format text for speech: remove markdown, HTML tags, and truncate
       const cleanedText = formatTextForSpeech(content);
       const finalText = truncateForSpeech(cleanedText, 1500);
-      
+
       speak(finalText);
     }
   };
@@ -428,7 +469,7 @@ function ChatInterface() {
   const handleCopyMessage = async (messageId: string, content: string) => {
     const cleanedText = formatTextForCopy(cleanAndParseText(content));
     const success = await copyToClipboard(cleanedText);
-    
+
     if (success) {
       setCopiedMessageId(messageId);
       showSuccess('Copied!', 'Answer copied to clipboard');
@@ -446,24 +487,24 @@ function ChatInterface() {
   const cleanAndParseText = (text: string) => {
     // First, clean up raw text
     let cleaned = text;
-    
+
     // Remove standalone asterisks at line start
     cleaned = cleaned.replace(/^\s*\*\s*/gm, '• ');
-    
+
     // Convert markdown bold and italic to HTML
     cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
     cleaned = cleaned.replace(/__(.*?)__/g, '<strong class="font-bold text-gray-900">$1</strong>');
     cleaned = cleaned.replace(/\*(.*?)\*/g, '<em class="italic text-gray-900">$1</em>');
     cleaned = cleaned.replace(/_(.*?)_/g, '<em class="italic text-gray-900">$1</em>');
-    
+
     // Handle numbered and bullet lists
     const lines = cleaned.split('\n');
     let html = '';
     let inParagraph = false;
-    
+
     for (let line of lines) {
       line = line.trim();
-      
+
       if (line === '') {
         if (inParagraph) {
           html += '</p>';
@@ -491,18 +532,18 @@ function ChatInterface() {
         html += line + ' ';
       }
     }
-    
+
     if (inParagraph) {
       html += '</p>';
     }
-    
+
     // Handle inline code
     html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-900">$1</code>');
-    
+
     // Clean up extra spacing
     html = html.replace(/<p>\s*<\/p>/g, '');
     html = html.replace(/\s+<\/p>/g, '</p>');
-    
+
     return html;
   };
 
@@ -523,9 +564,8 @@ function ChatInterface() {
           />
         )}
         <aside
-          className={`fixed lg:relative inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white flex flex-col transition-transform duration-300 ${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-          }`}
+          className={`fixed lg:relative inset-y-0 left-0 z-50 w-64 bg-gray-900 text-white flex flex-col transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+            }`}
         >
           <div className="p-4 border-b border-gray-800">
             <button
@@ -551,11 +591,10 @@ function ChatInterface() {
             {conversations.map((conv) => (
               <div
                 key={conv.id}
-                className={`group relative mb-1 rounded-lg transition-all ${
-                  conv.id === activeConversationId
+                className={`group relative mb-1 rounded-lg transition-all ${conv.id === activeConversationId
                     ? 'bg-gray-800'
                     : 'hover:bg-gray-800'
-                }`}
+                  }`}
               >
                 <button
                   onClick={() => setActiveConversationId(conv.id)}
@@ -675,9 +714,8 @@ function ChatInterface() {
               activeConversation.messages.map((msg: Message) => (
                 <div
                   key={msg.id}
-                  className={`flex gap-3 mb-6 ${
-                    msg.role === 'user' ? 'justify-end' : 'justify-start'
-                  }`}
+                  className={`flex gap-3 mb-6 ${msg.role === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
                 >
                   {msg.role === 'assistant' && (
                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
@@ -686,14 +724,19 @@ function ChatInterface() {
                   )}
                   <div className="flex flex-col gap-2">
                     <div
-                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${
-                        msg.role === 'user'
+                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.role === 'user'
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                           : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
-                      }`}
+                        }`}
                     >
                       {msg.role === 'assistant' ? (
-                        <ChatbotFormattedText text={msg.content} />
+                        <AssistantMessageContent
+                          text={msg.content}
+                          animate={msg.id === animatingMessageId}
+                          onDone={() =>
+                            setAnimatingMessageId((prev) => (prev === msg.id ? null : prev))
+                          }
+                        />
                       ) : (
                         <p>{msg.content}</p>
                       )}
@@ -704,11 +747,10 @@ function ChatInterface() {
                         <button
                           onClick={() => handleSpeakMessage(msg.id, msg.content)}
                           title={speakingMessageId === msg.id ? 'Stop speaking' : 'Speak message'}
-                          className={`p-2 rounded-lg transition-all ${
-                            speakingMessageId === msg.id
+                          className={`p-2 rounded-lg transition-all ${speakingMessageId === msg.id
                               ? 'bg-blue-500 text-white'
                               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
-                          }`}
+                            }`}
                         >
                           {speakingMessageId === msg.id ? (
                             <VolumeX className="w-4 h-4" />
@@ -728,11 +770,10 @@ function ChatInterface() {
                             setSpeakingMessageId(null);
                           }}
                           title="Stop speaking immediately"
-                          className={`p-2 rounded-lg transition-all ${
-                            copiedMessageId === msg.id
+                          className={`p-2 rounded-lg transition-all ${copiedMessageId === msg.id
                               ? ' text-white'
                               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
-                          }`}
+                            }`}
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -741,11 +782,10 @@ function ChatInterface() {
                         <button
                           onClick={() => handleCopyMessage(msg.id, msg.content)}
                           title="Copy answer"
-                          className={`p-2 rounded-lg transition-all ${
-                            copiedMessageId === msg.id
+                          className={`p-2 rounded-lg transition-all ${copiedMessageId === msg.id
                               ? 'bg-green-500 text-white'
                               : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
-                          }`}
+                            }`}
                         >
                           {copiedMessageId === msg.id ? (
                             <Check className="w-4 h-4" />
@@ -806,23 +846,21 @@ function ChatInterface() {
                 value={input}
                 onChange={handleInputChange}
                 placeholder={isListening ? 'Listening...' : 'Type your message...'}
-                className={`w-full resize-none rounded-2xl border px-4 py-3 pr-24 focus:outline-none focus:ring-2 ${
-                  isListening
+                className={`w-full resize-none rounded-2xl border px-4 py-3 pr-24 focus:outline-none focus:ring-2 ${isListening
                     ? 'border-red-400 bg-red-50 dark:bg-red-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-red-500'
                     : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-blue-500'
-                }`}
+                  }`}
               />
-              
+
               {/* Microphone Button */}
               <button
                 type="button"
                 onClick={handleVoiceInput}
                 title={isListening ? 'Stop listening' : 'Start voice input'}
-                className={`absolute right-14 bottom-2 p-2 rounded-xl transition-all ${
-                  isListening
+                className={`absolute right-14 bottom-2 p-2 rounded-xl transition-all ${isListening
                     ? 'bg-red-500 text-white hover:bg-red-600'
                     : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
-                }`}
+                  }`}
               >
                 {isListening ? (
                   <MicOff className="w-5 h-5" />

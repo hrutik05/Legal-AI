@@ -16,13 +16,21 @@ import {
   RadialBar,
   PolarAngleAxis,
 } from 'recharts';
+import { useTypewriter } from '../hooks/useTypewriter';
 
 interface AnswerBoxProps {
   answer: string;
   analysis: PdfAnalysis | null;
+  animateTyping?: boolean;
+  typingSpeed?: number;
 }
 
-export default function AnswerBox({ answer, analysis }: AnswerBoxProps) {
+export default function AnswerBox({
+  answer,
+  analysis,
+  animateTyping = true,
+  typingSpeed = 16,
+}: AnswerBoxProps) {
 
   const percentageColors = ['#2563eb', '#7c3aed', '#14b8a6', '#f59e0b'];
   const formatPercent = (value: unknown) => `${Number(value ?? 0).toFixed(2)}%`;
@@ -54,6 +62,13 @@ export default function AnswerBox({ answer, analysis }: AnswerBoxProps) {
       },
     ]
     : [];
+
+  const { typedText, isTyping } = useTypewriter(answer ?? '', {
+    enabled: animateTyping,
+    speed: typingSpeed,
+  });
+
+  const visibleText = animateTyping ? typedText : (answer ?? '');
 
   return (
     <div className="w-full flex justify-center">
@@ -191,7 +206,10 @@ export default function AnswerBox({ answer, analysis }: AnswerBoxProps) {
             </>
           )}
 
-          <FormattedText text={answer} />
+          <FormattedText text={visibleText} />
+          {animateTyping && isTyping && (
+            <p className="text-sm text-blue-600 dark:text-cyan-300 animate-pulse">Typing...</p>
+          )}
         </div>
 
         <div className="flex items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm sticky bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
