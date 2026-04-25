@@ -82,7 +82,7 @@ export default function PdfUploader({ setPdfFile, setPdfText, onUploadStart }: P
         onDrop={handleDrop}
         className={`
           group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed 
-          transition-all duration-300 cursor-pointer p-8
+          transition-all duration-300 cursor-pointer p-8 min-h-[210px] h-full
           ${isDragging
             ? 'border-blue-500 bg-blue-100 dark:bg-blue-500/20 scale-105 dark:border-cyan-400'
             : 'border-gray-300 dark:border-purple-500/50 bg-gray-50 dark:bg-gradient-to-br dark:from-slate-800/50 dark:to-slate-900/50 hover:border-blue-400 dark:hover:border-purple-400/80'

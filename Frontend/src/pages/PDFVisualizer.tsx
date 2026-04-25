@@ -34,44 +34,57 @@ export default function PDFVisualizer() {
             </p>
           </div>
 
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Left Column - Upload and Viewer */}
-            <div className="space-y-6">
-              <PdfUploader
-                setPdfFile={setPdfFile}
-                setPdfText={setPdfText}
-                onUploadStart={handleUploadStart}
-              />
-              {pdfFile && <PdfViewer file={pdfFile} />}
-            </div>
+          {/* Input Section: Upload + Summary */}
+          <section className="space-y-6 mb-8">
+            {!pdfFile ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                <div className="h-full">
+                  <PdfUploader
+                    setPdfFile={setPdfFile}
+                    setPdfText={setPdfText}
+                    onUploadStart={handleUploadStart}
+                  />
+                </div>
 
-            {/* Right Column - Questions and Answers */}
-            <div className="space-y-6">
-              {pdfText && (
-                <QuestionBox
-                  pdfText={pdfText}
-                  setAnswer={setAnswer}
-                  setAnalysis={setAnalysis}
-                />
-              )}
-
-              {!pdfFile && (
-                <div className="rounded-2xl border border-blue-200 dark:border-cyan-500/30 bg-gradient-to-br from-blue-50 dark:from-cyan-500/10 to-purple-50 dark:to-purple-500/10 backdrop-blur-xl p-8 text-center shadow-lg dark:shadow-cyan-500/10">
+                <div className="rounded-2xl border border-blue-200 dark:border-cyan-500/30 bg-gradient-to-br from-blue-50 dark:from-cyan-500/10 to-purple-50 dark:to-purple-500/10 backdrop-blur-xl p-8 text-center shadow-lg dark:shadow-cyan-500/10 min-h-[210px] h-full flex flex-col items-center justify-center">
                   <div className="text-5xl mb-4">🚀</div>
                   <h3 className="text-gray-900 dark:text-white font-semibold text-lg mb-2">Get Started</h3>
                   <p className="text-gray-700 dark:text-gray-400">
                     Upload a PDF document to begin analyzing legal content with AI
                   </p>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            ) : (
+              <PdfUploader
+                setPdfFile={setPdfFile}
+                setPdfText={setPdfText}
+                onUploadStart={handleUploadStart}
+              />
+            )}
 
+            {pdfText && (
+              <QuestionBox
+                pdfText={pdfText}
+                setAnswer={setAnswer}
+                setAnalysis={setAnalysis}
+              />
+            )}
+
+          </section>
+
+          {/* Viewer Section */}
+          {pdfFile && (
+            <section className="mb-8">
+              <h2 className="text-gray-900 dark:text-white text-xl font-semibold mb-4">PDF Viewer</h2>
+              <PdfViewer file={pdfFile} />
+            </section>
+          )}
+
+          {/* Output Section */}
           {answer && (
-            <div className="w-full flex justify-center mb-8">
+            <section className="w-full flex justify-center mb-8">
               <AnswerBox answer={answer} analysis={analysis} />
-            </div>
+            </section>
           )}
         </div>
       </main>
