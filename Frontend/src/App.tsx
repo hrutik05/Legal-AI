@@ -70,14 +70,14 @@ const AppContent = () => {
         <SkipLink href="#main-content">Skip to main content</SkipLink>
         <OfflineIndicator isOnline={isOnline} />
         <TranslationNotice />
-        
+
         <ErrorBoundary fallback={
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center">
               <h2 className="text-xl font-semibold mb-2">Navigation Error</h2>
               <p className="text-gray-600 mb-4">There was an issue loading the navigation.</p>
-              <button 
-                onClick={() => window.location.reload()} 
+              <button
+                onClick={() => window.location.reload()}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg"
               >
                 Reload Page
@@ -86,104 +86,105 @@ const AppContent = () => {
           </div>
         }>
           <Routes>
-              <Route path="/" element={
-                <ErrorBoundary>
-                  <Header onChatToggle={toggleChat} />
-                  <main id="main-content">
-                    <Hero onChatToggle={toggleChat} />
-                    {isChatOpen && (
-                      <ErrorBoundary fallback={
-                        <div className="py-20 text-center">
-                          <p className="text-gray-600">Chat is temporarily unavailable.</p>
-                        </div>
-                      }>
-                        <ChatInterface />
-                      </ErrorBoundary>
-                    )}
-                    <LegalAreas />
-                    <Features />
-                    <About />
-                    <Contact />
-                  </main>
-                  <Footer />
-                </ErrorBoundary>
-              } />
-              <Route path="/constitutional-law" element={
-                <ErrorBoundary>
-                  <Header onChatToggle={toggleChat} />
-                  <main id="main-content"><ConstitutionalLaw /></main>
-                  <Footer />
-                </ErrorBoundary>
-              } />
-              <Route path="/criminal-law" element={
-                <ErrorBoundary>
-                  <Header onChatToggle={toggleChat} />
-                  <main id="main-content"><CriminalLaw /></main>
-                  <Footer />
-                </ErrorBoundary>
-              } />
-              <Route path="/civil-law" element={
-                <ErrorBoundary>
-                  <Header onChatToggle={toggleChat} />
-                  <main id="main-content"><CivilLaw /></main>
-                  <Footer />
-                </ErrorBoundary>
-              } />
-              <Route path="/property-law" element={
-                <ErrorBoundary>
-                  <Header onChatToggle={toggleChat} />
-                  <main id="main-content"><PropertyLaw /></main>
-                  <Footer />
-                </ErrorBoundary>
-              } />
-              <Route path="/api-reference" element={
-                <ErrorBoundary>
-                  <ApiReference />
-                </ErrorBoundary>
-              } />
-              <Route path="/user-guide" element={
-                <ErrorBoundary>
-                  <UserGuide />
-                </ErrorBoundary>
-              } />
-              <Route path="/faq" element={
-                <ErrorBoundary>
-                  <FAQ />
-                </ErrorBoundary>
-              } />
-              <Route path="/support" element={
-                <ErrorBoundary>
-                  <Support />
-                </ErrorBoundary>
-              } />
-              <Route path="/documentation" element={
-                <ErrorBoundary>
-                  <Documentation />
-                </ErrorBoundary>
-              } />
-              <Route path="/pdf-visualizer" element={
-                <ErrorBoundary>
-                  <PDFVisualizer />
-                </ErrorBoundary>
-              } />
-              <Route path="/project-info" element={
-                <ErrorBoundary>
-                  <ProjectInfo />
-                </ErrorBoundary>
-              } />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/server-error" element={<ServerError />} />
-              <Route path="/chat" element={<ChatInterface />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </ErrorBoundary>
-          
-          <ToastContainer toasts={toasts} onClose={removeToast} />
-        </div>
-      </Router>
+            <Route path="/" element={
+              <ErrorBoundary>
+                <Header onChatToggle={toggleChat} />
+                <main id="main-content">
+                  <Hero onChatToggle={toggleChat} />
+                  {isChatOpen && (
+                    <ErrorBoundary fallback={
+                      <div className="py-20 text-center">
+                        <p className="text-gray-600">Chat is temporarily unavailable.</p>
+                      </div>
+                    }>
+                      <ChatInterface />
+                    </ErrorBoundary>
+                  )}
+                  <LegalAreas />
+                  <Features />
+                  <About />
+                  <Contact />
+                </main>
+                <Footer />
+              </ErrorBoundary>
+            } />
+            <Route path="/constitutional-law" element={
+              <ErrorBoundary>
+                <Header onChatToggle={toggleChat} />
+                <main id="main-content"><ConstitutionalLaw /></main>
+                <Footer />
+              </ErrorBoundary>
+            } />
+            <Route path="/criminal-law" element={
+              <ErrorBoundary>
+                <Header onChatToggle={toggleChat} />
+                <main id="main-content"><CriminalLaw /></main>
+                <Footer />
+              </ErrorBoundary>
+            } />
+            <Route path="/civil-law" element={
+              <ErrorBoundary>
+                <Header onChatToggle={toggleChat} />
+                <main id="main-content"><CivilLaw /></main>
+                <Footer />
+              </ErrorBoundary>
+            } />
+            <Route path="/property-law" element={
+              <ErrorBoundary>
+                <Header onChatToggle={toggleChat} />
+                <main id="main-content"><PropertyLaw /></main>
+                <Footer />
+              </ErrorBoundary>
+            } />
+            <Route path="/api-reference" element={
+              <ErrorBoundary>
+                <ApiReference />
+              </ErrorBoundary>
+            } />
+            <Route path="/user-guide" element={
+              <ErrorBoundary>
+                <UserGuide />
+              </ErrorBoundary>
+            } />
+            <Route path="/faq" element={
+              <ErrorBoundary>
+                <FAQ />
+              </ErrorBoundary>
+            } />
+            <Route path="/support" element={
+              <ErrorBoundary>
+                <Support />
+              </ErrorBoundary>
+            } />
+            <Route path="/documentation" element={
+              <ErrorBoundary>
+                <Documentation />
+              </ErrorBoundary>
+            } />
+            <Route path="/pdf-visualizer" element={
+              <ErrorBoundary>
+                <PDFVisualizer />
+              </ErrorBoundary>
+            } />
+            <Route path="/project-info" element={
+              <ErrorBoundary>
+                <ProjectInfo />
+              </ErrorBoundary>
+            } />
+
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/server-error" element={<ServerError />} />
+            <Route path="/chat" element={<ChatInterface />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ErrorBoundary>
+
+        <ToastContainer toasts={toasts} onClose={removeToast} />
+      </div>
+    </Router>
   );
 }
 export default App;

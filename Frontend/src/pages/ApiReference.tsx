@@ -165,14 +165,14 @@ export default function ApiReference() {
               </div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white">API Overview</h2>
             </div>
-            
+
             <div className="space-y-6">
-              <div>
+              {/* <div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Base URL</h3>
                 <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg font-mono text-sm">
                   https://api.legalai.com/v1
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">Content Type</h3>
@@ -247,173 +247,6 @@ export default function ApiReference() {
                   <li>• Rotate keys regularly</li>
                   <li>• Monitor API usage for unusual activity</li>
                 </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* API Endpoints */}
-        <section id="endpoints" className="mb-16">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-lg">
-                  <Database className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">API Endpoints</h2>
-              </div>
-              
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search endpoints..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              {filteredEndpoints.map((endpoint, index) => (
-                <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 dark:bg-gray-700 p-4 border-b border-gray-200 dark:border-gray-600">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          endpoint.method === 'GET' ? 'bg-green-100 text-green-800' :
-                          endpoint.method === 'POST' ? 'bg-blue-100 text-blue-800' :
-                          'bg-orange-100 text-orange-800'
-                        }`}>
-                          {endpoint.method}
-                        </span>
-                        <code className="font-mono text-sm text-gray-900 dark:text-gray-100">
-                          {endpoint.path}
-                        </code>
-                      </div>
-                      <button
-                        onClick={() => copyToClipboard(endpoint.path, endpoint.path)}
-                        className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                      >
-                        {copiedEndpoint === endpoint.path ? (
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-300 mt-2">{endpoint.description}</p>
-                  </div>
-                  
-                  <div className="p-4">
-                    {endpoint.parameters.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Parameters</h4>
-                        <div className="overflow-x-auto">
-                          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                            <thead className="bg-gray-50 dark:bg-gray-700">
-                              <tr>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Name</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Type</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Required</th>
-                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Description</th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                              {endpoint.parameters.map((param, paramIndex) => (
-                                <tr key={paramIndex}>
-                                  <td className="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">{param.name}</td>
-                                  <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{param.type}</td>
-                                  <td className="px-4 py-2 text-sm">
-                                    <span className={`px-2 py-1 rounded-full text-xs ${
-                                      param.required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
-                                    }`}>
-                                      {param.required ? 'Required' : 'Optional'}
-                                    </span>
-                                  </td>
-                                  <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{param.description}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
-                    
-                    <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Response Format</h4>
-                      <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-sm overflow-x-auto">
-                        <code className="text-gray-900 dark:text-gray-100">
-                          {JSON.stringify(endpoint.response, null, 2)}
-                        </code>
-                      </pre>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Database Schema */}
-        <section id="database" className="mb-16">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-gradient-to-r from-orange-600 to-red-600 p-3 rounded-lg">
-                <Database className="w-6 h-6 text-white" />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Database Schema</h2>
-            </div>
-
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Users Collection</h3>
-                  <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto">
-{`{
-  "_id": "ObjectId",
-  "fullName": "string",
-  "email": "string (unique)",
-  "phone": "string",
-  "password": "string (hashed)",
-  "createdAt": "Date",
-  "__v": "number"
-}`}
-                  </pre>
-                </div>
-
-                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Legal Queries Collection</h3>
-                  <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto">
-{`{
-  "_id": "ObjectId",
-  "userId": "ObjectId",
-  "messages": [
-    {
-      "query": "string",
-      "response": "string (JSON)",
-      "timestamp": "Date",
-      "_id": "ObjectId"
-    }
-  ],
-  "createdAt": "Date",
-  "updatedAt": "Date",
-  "__v": "number"
-}`}
-                  </pre>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Relationships</h3>
-                <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
-                  <ul className="space-y-2 text-blue-800 dark:text-blue-200">
-                    <li>• Users → Legal Queries (One-to-Many via userId)</li>
-                    <li>• Legal Queries → Messages (One-to-Many nested array)</li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
@@ -599,14 +432,14 @@ export default function ApiReference() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">OpenAI GPT-4</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">General LLM for fine-tuning and legal query generation</p>
                     <a href="https://openai.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center space-x-1">
                       <span>Visit</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
-                  </div>
+                  </div> */}
                   <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">HuggingFace Transformers</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">BERT, Legal-BERT, and other NLP models for legal tasks</p>
@@ -637,14 +470,14 @@ export default function ApiReference() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Weaviate</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Open-source vector search engine for semantic retrieval</p>
                     <a href="https://weaviate.io/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center space-x-1">
                       <span>Visit</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
-                  </div>
+                  </div> */}
                   <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">FAISS</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Local vector index for embeddings and similarity search</p>
@@ -653,14 +486,14 @@ export default function ApiReference() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Milvus</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Scalable vector database for large-scale retrieval</p>
                     <a href="https://milvus.io/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center space-x-1">
                       <span>Visit</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -691,14 +524,179 @@ export default function ApiReference() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                  {/* <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">Docker</h4>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Containerization for application deployment</p>
                     <a href="https://www.docker.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center space-x-1">
                       <span>Visit</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
+                  </div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <section id="endpoints" className="mb-16">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-lg">
+                  <Database className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white">API Endpoints</h2>
+              </div>
+
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search endpoints..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {filteredEndpoints.map((endpoint, index) => (
+                <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 dark:bg-gray-700 p-4 border-b border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${endpoint.method === 'GET' ? 'bg-green-100 text-green-800' :
+                          endpoint.method === 'POST' ? 'bg-blue-100 text-blue-800' :
+                            'bg-orange-100 text-orange-800'
+                          }`}>
+                          {endpoint.method}
+                        </span>
+                        <code className="font-mono text-sm text-gray-900 dark:text-gray-100">
+                          {endpoint.path}
+                        </code>
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(endpoint.path, endpoint.path)}
+                        className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                      >
+                        {copiedEndpoint === endpoint.path ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 mt-2">{endpoint.description}</p>
                   </div>
+
+                  <div className="p-4">
+                    {endpoint.parameters.length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Parameters</h4>
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                            <thead className="bg-gray-50 dark:bg-gray-700">
+                              <tr>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Name</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Type</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Required</th>
+                                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase">Description</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+                              {endpoint.parameters.map((param, paramIndex) => (
+                                <tr key={paramIndex}>
+                                  <td className="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">{param.name}</td>
+                                  <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{param.type}</td>
+                                  <td className="px-4 py-2 text-sm">
+                                    <span className={`px-2 py-1 rounded-full text-xs ${param.required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                                      }`}>
+                                      {param.required ? 'Required' : 'Optional'}
+                                    </span>
+                                  </td>
+                                  <td className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{param.description}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Response Format</h4>
+                      <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-sm overflow-x-auto">
+                        <code className="text-gray-900 dark:text-gray-100">
+                          {JSON.stringify(endpoint.response, null, 2)}
+                        </code>
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Database Schema */}
+        <section id="database" className="mb-16">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="bg-gradient-to-r from-orange-600 to-red-600 p-3 rounded-lg">
+                <Database className="w-6 h-6 text-white" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Database Schema</h2>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Users Collection</h3>
+                  <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto">
+                    {`{
+  "_id": "ObjectId",
+  "fullName": "string",
+  "email": "string (unique)",
+  "phone": "string",
+  "password": "string (hashed)",
+  "createdAt": "Date",
+  "__v": "number"
+}`}
+                  </pre>
+                </div>
+
+                <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Legal Queries Collection</h3>
+                  <pre className="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto">
+                    {`{
+  "_id": "ObjectId",
+  "userId": "ObjectId",
+  "messages": [
+    {
+      "query": "string",
+      "response": "string (JSON)",
+      "timestamp": "Date",
+      "_id": "ObjectId"
+    }
+  ],
+  "createdAt": "Date",
+  "updatedAt": "Date",
+  "__v": "number"
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Relationships</h3>
+                <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
+                  <ul className="space-y-2 text-blue-800 dark:text-blue-200">
+                    <li>• Users → Legal Queries (One-to-Many via userId)</li>
+                    <li>• Legal Queries → Messages (One-to-Many nested array)</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -715,7 +713,7 @@ export default function ApiReference() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Success Response (2xx)</h3>
                 <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-sm overflow-x-auto">
                   <code className="text-gray-900 dark:text-gray-100">
-{`{
+                    {`{
   "success": true,
   "data": { /* response data */ },
   "message": "Operation successful"
@@ -728,7 +726,7 @@ export default function ApiReference() {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Error Response (4xx/5xx)</h3>
                 <pre className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-sm overflow-x-auto">
                   <code className="text-gray-900 dark:text-gray-100">
-{`{
+                    {`{
   "success": false,
   "error": "Error message",
   "message": "Descriptive error details"

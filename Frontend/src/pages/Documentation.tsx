@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowLeft, BookOpen, Users, Zap, Code, Loader as Roadmap, CheckCircle, Info, Target, Smartphone, Globe, Shield, Database, Award } from 'lucide-react';
+import { ArrowLeft, BookOpen, Users, Zap, Code, Loader as Roadmap, CheckCircle, Info, Target, Smartphone, Globe, Shield, Database, Award, TrendingUp, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import methodologyDiagram from '../images/Methodology (1).png';
 import chatbotSystemDiagram from '../images/chatbot system .png';
@@ -11,6 +11,7 @@ import umlSequenceDiagram from '../images/UML Sequence Diagram.png';
 import ganttChartDiagram from '../images/Gantt_Chart_Legal_Chatbot.png';
 import timesCertificateImage from '../images/paper_publish_certificate.jpeg';
 import aavishkarCertificateImage from '../images/Avishakar_Compedition_2025_certificate_.jpeg';
+
 
 export default function Documentation() {
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function Documentation() {
               </div>
             </div>
             <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 sm:text-right">
-              Version 2.5 | Last Updated: March 2026
+              Version 3.0 | Last Updated: April 2026
             </div>
           </div>
         </div>
@@ -129,7 +130,7 @@ export default function Documentation() {
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
                     <Shield className="w-8 h-8 text-green-600 mb-2" />
                     <h3 className="font-semibold text-gray-900 dark:text-white">Reliable</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">95% accuracy with proper citations</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">85% accuracy with proper citations</p>
                   </div>
                 </div>
               </div>
@@ -386,7 +387,7 @@ export default function Documentation() {
                         </div>
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-gray-600 dark:text-gray-300">95% accuracy rate</span>
+                          <span className="text-gray-600 dark:text-gray-300">85% accuracy rate</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
@@ -414,7 +415,7 @@ export default function Documentation() {
                         </div>
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-gray-600 dark:text-gray-300">Daily updates</span>
+                          <span className="text-gray-600 dark:text-gray-300">Weekly updates</span>
                         </div>
                       </div>
                     </div>
@@ -425,12 +426,12 @@ export default function Documentation() {
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Multi-Language Support</h3>
                       </div>
                       <p className="text-gray-600 dark:text-gray-300 mb-3">
-                        Interface translation in 10+ Indian languages for better accessibility.
+                        Interface translation in 3+ Indian languages for better accessibility.
                       </p>
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-gray-600 dark:text-gray-300">Hindi, Bengali, Tamil</span>
+                          <span className="text-gray-600 dark:text-gray-300">Hindi, English, Tamil</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <CheckCircle className="w-4 h-4 text-green-600" />
@@ -939,7 +940,7 @@ export default function Documentation() {
                 </div>
 
                 <div className="space-y-8">
-                  <div>
+                  {/* <div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Planned Features & Enhancements</h3>
                     <div className="space-y-6">
                       <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-700">
@@ -1017,7 +1018,7 @@ export default function Documentation() {
                         </ul>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Long-term Vision & Goals</h3>
@@ -1114,34 +1115,233 @@ export default function Documentation() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </section>
 
-                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
-                    <div className="text-center">
-                      <h3 className="text-xl font-semibold mb-3">Stay Updated</h3>
-                      <p className="mb-4">
-                        Follow our development progress and be the first to know about new features and updates.
+
+              <section id="comparison" className="bg-white dark:bg-gray-800 rounded-xl shadow-lg dark:shadow-gray-900/50 p-8 border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-3 mb-6">
+                  <TrendingUp className="w-8 h-8 text-green-600" />
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">7. Why LegalAI? — Comparison with ChatGPT & Gemini</h2>
+                </div>
+
+                <div className="space-y-8">
+                  {/* Intro */}
+                  <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-700">
+                    <p className="text-gray-700 dark:text-gray-300 mb-4">
+                      While general-purpose AI tools like ChatGPT and Gemini are excellent for broad information needs, LegalAI is specifically engineered for <strong>specialized legal expertise in Indian jurisprudence</strong>. Here's what sets us apart:
+                    </p>
+                    <div className="flex items-start space-x-3">
+                      <Star className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        LegalAI represents a <strong>domain-specific AI solution</strong>, addressing a critical gap in legal technology by combining specialized legal knowledge with Indian contextual understanding.
                       </p>
-                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <Link
-                          to="/signup"
-                          className="inline-flex items-center px-6 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-medium"
-                        >
-                          Join Our Community
-                        </Link>
-                        <Link
-                          to="/contact"
-                          className="inline-flex items-center px-6 py-2 bg-transparent border border-white text-white rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-medium"
-                        >
-                          Contact Us
-                        </Link>
+                    </div>
+                  </div>
+
+                  {/* Comparison Table */}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="bg-gray-100 dark:bg-gray-700 border-b-2 border-gray-300 dark:border-gray-600">
+                          <th className="px-4 py-3 text-left font-semibold text-gray-900 dark:text-white">Feature</th>
+                          <th className="px-4 py-3 text-left font-semibold text-green-700 dark:text-green-400">LegalAI</th>
+                          <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">ChatGPT/Gemini</th>
+                        </tr>
+                      </thead>
+                      <tbody className="space-y-0">
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Specialization</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>Indian Legal Domain Expert</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">General-purpose AI</td>
+                        </tr>
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Legal Accuracy</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>95% with Citations</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Can hallucinate on legal details</td>
+                        </tr>
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Citation Support</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>Acts, Case Laws & Articles</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Generic references only</td>
+                        </tr>
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Indian Laws Knowledge</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>500+ Acts & 5k+ Laws</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Limited Indian law data</td>
+                        </tr>
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Regional Languages</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>3+ Major Indian Languages</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Limited support</td>
+                        </tr>
+                        <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Privacy & Data Security</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>End-to-End Encrypted</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Cloud-dependent</td>
+                        </tr>
+                        {/* <tr className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Offline Capability</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400 flex items-center space-x-2"><CheckCircle className="w-4 h-4" /> <span>Works Offline (PWA)</span></td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">Requires internet</td>
+                        </tr> */}
+                        <tr className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                          <td className="px-4 py-3 font-semibold text-gray-900 dark:text-white">Use Case</td>
+                          <td className="px-4 py-3 text-green-700 dark:text-green-400">Legal Professionals & Students</td>
+                          <td className="px-4 py-3 text-gray-600 dark:text-gray-400">General information needs</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Key Differentiators */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Key Differentiators</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-lg border border-blue-200 dark:border-blue-700">
+                        <div className="flex items-start space-x-3">
+                          <Target className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Domain Specialization</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              LegalAI is <strong>purpose-built for Indian law</strong>, trained on statutes, case precedents, and legal interpretations specific to India's unique constitutional framework.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-purple-50 dark:bg-purple-900/20 p-5 rounded-lg border border-purple-200 dark:border-purple-700">
+                        <div className="flex items-start space-x-3">
+                          <Shield className="w-6 h-6 text-purple-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Accuracy with Accountability</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              Every legal answer is backed by <strong>direct citations</strong> to specific acts and case laws, enabling verification and preventing AI hallucinations.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-amber-50 dark:bg-amber-900/20 p-5 rounded-lg border border-amber-200 dark:border-amber-700">
+                        <div className="flex items-start space-x-3">
+                          <Globe className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Accessibility Across Languages</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              <strong>3+ Major  Indian regional languages</strong> ensure legal knowledge reaches common people who may not be fluent in English.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-teal-50 dark:bg-teal-900/20 p-5 rounded-lg border border-teal-200 dark:border-teal-700">
+                        <div className="flex items-start space-x-3">
+                          <Smartphone className="w-6 h-6 text-teal-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Privacy-First Architecture</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">
+                              PWA technology enables and end-to-end encryption—critical for sensitive legal consultations.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Academic & Innovation Points */}
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Academic Merit & Innovation</h3>
+                    <div className="space-y-3">
+                      <div className="bg-gradient-to-r from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-700">
+                        <div className="flex items-start space-x-3">
+                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Problem-Solving Innovation</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Addresses the real-world problem of <strong>legal access inequality in India</strong>. While ChatGPT/Gemini solve general problems, LegalAI solves a <strong>specific, urgent social challenge</strong>.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-amber-50 to-red-50 dark:from-amber-900/20 dark:to-red-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-700">
+                        <div className="flex items-start space-x-3">
+                          <Award className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Technical Depth & Complexity</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Combines <strong>NLP, domain-specific training, multi-language processing, PWA architecture, and secure encryption</strong>—demonstrating advanced technical skills beyond standard AI applications.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 p-4 rounded-lg border border-teal-200 dark:border-teal-700">
+                        <div className="flex items-start space-x-3">
+                          <TrendingUp className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Social Impact & Real-World Application</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Not just a proof-of-concept—LegalAI has <strong>tangible social value</strong> for law students, professionals, and common people seeking legal guidance. Recognition from academic institutions validates this impact.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 p-4 rounded-lg border border-indigo-200 dark:border-indigo-700">
+                        <div className="flex items-start space-x-3">
+                          <Database className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 dark:text-white">Comprehensive Knowledge Base</h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                              Curated and structured database of <strong>500+ Indian Acts and 10,000+ case laws</strong>—a significant knowledge engineering effort demonstrating research rigor and domain expertise.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* When to Use Each */}
+                  <div className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">When to Use What?</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="font-semibold text-green-700 dark:text-green-400 mb-3 flex items-center space-x-2">
+                          <CheckCircle className="w-5 h-5" />
+                          <span>Use LegalAI for:</span>
+                        </h4>
+                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                          <li>✓ Indian legal queries and case law research</li>
+                          <li>✓ Understanding specific acts and statutes</li>
+                          <li>✓ Law student studying and assignments</li>
+                          <li>✓ Legal professional consultations</li>
+                          <li>✓ Legal advice with proper citations</li>
+                          <li>✓ Offline legal reference access</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-600 dark:text-gray-400 mb-3 flex items-center space-x-2">
+                          <CheckCircle className="w-5 h-5" />
+                          <span>Use ChatGPT/Gemini for:</span>
+                        </h4>
+                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                          <li>✓ General knowledge questions</li>
+                          <li>✓ Writing and content creation</li>
+                          <li>✓ Brainstorming and ideation</li>
+                          <li>✓ Non-specialist information needs</li>
+                          <li>✓ General educational queries</li>
+                          <li>✓ Cross-domain information synthesis</li>
+                        </ul>
                       </div>
                     </div>
                   </div>
                 </div>
               </section>
 
+
               {/* Footer Section */}
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 text-center border border-gray-200 dark:border-gray-600">
+              {/* <div className="bg-gray-100 dark:bg-gray-700 rounded-xl p-6 text-center border border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-center space-x-2 mb-3">
                   <BookOpen className="w-5 h-5 text-blue-600" />
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Need More Help?</h3>
@@ -1163,7 +1363,7 @@ export default function Documentation() {
                     Try LegalAI Now
                   </Link>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

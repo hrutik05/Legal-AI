@@ -63,7 +63,7 @@ const LAW_PATTERNS = [
   /\bprobation\b/i,
   /\bsection\s\d+/i,
   /\bsection\s(1[0-9]{2}|2[0-9]{2}|3[0-9]{2}|4[0-9]{2}|5[0-9]{2}|6[0-9]{2}|7[0-9]{2}|8[0-9]{2}|9[0-9]{2})\b/i,
-  
+
 
   // ================= CIVIL LAW =================
   /\bcivil\b/i,
@@ -315,7 +315,7 @@ export const chatbotQuery = async (req, res) => {
     }
 
     // build a prompt that reminds the model to stick to Indian legal context
-    const prompt = `${query} \n\n--\nPlease respond strictly based on Indian laws when answering the above query.`;
+    const prompt = `${query} \n\n--\n first check if query is related to indian legal laws(if not then firectlly answer "Query is Outside the Legal Domain Please Enter Valid Query") and then respond strictly based on Indian laws when answering the above query.`;
     // ✅ SINGLE GEMINI API CALL - Get the response
     const result = await model.generateContent(prompt);
     const answer = result.response.text();
@@ -328,7 +328,7 @@ export const chatbotQuery = async (req, res) => {
     if (err.status == 429) {
       return res.status(429).json({
         success: false,
-        message: 'Gemini API quota exceeded. Please wait and retry.'
+        message: 'quota exceeded. Please wait and retry.'
       });
     }
 
