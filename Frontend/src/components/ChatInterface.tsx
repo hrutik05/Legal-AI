@@ -271,7 +271,7 @@ function ChatInterface() {
       const resp = await apiClient.post<BotResponse>('/auth/chatbot/query', { query: queryToSend });
 
       // resp.data should contain { answer, citations, disclaimer } (see Python service)
-      let botContent = 'Query is outside supported legal domains. This chatbot answers only legal (law-related) queries.';
+      let botContent = '*Query is Outside the Legal Domain Please Enter Valid Query OR Related to Only Constitutional, Criminal, Civil & Property law.*';
       if (resp && resp.success) {
         // Normalize several possible shapes coming from backend/proxy:
         // 1) resp.data = { answer: '...' , citations: [...] }
