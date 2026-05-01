@@ -112,7 +112,7 @@ export default function ContextualLinks({ context, className = '' }: ContextualL
       </h3>
       
       <div className="space-y-3">
-        {links.map((link, index) => (
+        {links.map((link) => (
           <Link
             key={link.path}
             to={link.path}

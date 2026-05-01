@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, BookOpen, MessageSquare, Users, Settings, HelpCircle, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import { Search, BookOpen, MessageSquare, Users, Settings, HelpCircle, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import ContextualLinks from '../components/ContextualLinks';
 

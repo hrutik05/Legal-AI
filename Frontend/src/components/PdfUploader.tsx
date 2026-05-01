@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { uploadPdf } from '../utils/pdfApiClient';
-import { Upload } from 'lucide-react';
 
 interface PdfUploaderProps {
   setPdfFile: (file: string) => void;
@@ -43,9 +42,9 @@ export default function PdfUploader({ setPdfFile, setPdfText, onUploadStart }: P
       } else {
         throw new Error('No text could be extracted from the PDF');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // ✅ FIX: Better error message display
-      const errorMessage = err.response?.data?.detail || err.message || 'Unknown error occurred';
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       console.error('Upload failed:', errorMessage);
       setError(errorMessage);
       setUploading(false);

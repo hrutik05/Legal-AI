@@ -37,7 +37,7 @@ export default function Support() {
         subject: '',
         message: ''
       });
-    } catch (err) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, Code, Database, Shield, Key, Clock, ExternalLink, Copy, CheckCircle } from 'lucide-react';
+import { Search, Code, Database, Shield, Key, ExternalLink, Copy, CheckCircle } from 'lucide-react';
 import Breadcrumbs from '../components/Breadcrumbs';
 import ContextualLinks from '../components/ContextualLinks';
 

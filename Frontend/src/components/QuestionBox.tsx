@@ -32,8 +32,8 @@ export default function QuestionBox({ pdfText, setAnswer, setAnalysis }: Questio
         setAnswer(res.data.summary);
         setAnalysis(res.data.analysis || null);
       }
-    } catch (err: any) {
-      setError('Failed to summarize: ' + (err.message || 'Unknown error'));
+    } catch (err: unknown) {
+      setError('Failed to summarize: ' + (err instanceof Error ? err.message : 'Unknown error'));
       setAnswer('');
       setAnalysis(null);
     } finally {

@@ -1,6 +1,6 @@
 import { logApiError, logNetworkError } from './logger';
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   error?: string;
   status: number;
@@ -33,7 +33,7 @@ class ApiClient {
     try {
       // Check if response is ok
       if (!response.ok) {
-        let errorData;
+        let errorData: { message?: string; error?: string };
         try {
           errorData = await response.json();
         } catch {
@@ -55,7 +55,7 @@ class ApiClient {
         return {
           success: false,
           status: response.status,
-          error: errorData.message || `Request failed with status ${response.status}`,
+          error: errorData.message || errorData.error || `Request failed with status ${response.status}`,
         };
       }
 
@@ -118,7 +118,7 @@ class ApiClient {
 
   async post<T>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {
@@ -130,7 +130,7 @@ class ApiClient {
 
   async put<T>(
     endpoint: string,
-    data?: any,
+    data?: unknown,
     headers?: Record<string, string>
   ): Promise<ApiResponse<T>> {
     return this.makeRequest<T>(endpoint, {

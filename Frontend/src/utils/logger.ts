@@ -6,7 +6,7 @@ interface LogContext {
   timestamp?: string;
   userAgent?: string;
   url?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface ErrorLogData {
@@ -122,7 +122,7 @@ class Logger {
     url: string;
     method: string;
     status: number;
-    response?: any;
+    response?: unknown;
   }) {
     this.logError(error, {
       type: 'api_error',

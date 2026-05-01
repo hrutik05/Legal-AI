@@ -439,9 +439,9 @@ function ChatInterface() {
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('chat-page.pdf');
       showSuccess('Downloaded', 'Chat page saved as PDF');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('PDF generation error:', err);
-      showError('PDF Error', err?.message || 'Failed to generate PDF');
+      showError('PDF Error', err instanceof Error ? err.message : 'Failed to generate PDF');
     }
   };
 

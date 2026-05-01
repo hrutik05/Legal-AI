@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Info, X, Globe } from 'lucide-react';
+import { X, Globe } from 'lucide-react';
 
 export default function TranslationNotice() {
   const [isVisible, setIsVisible] = useState(false);

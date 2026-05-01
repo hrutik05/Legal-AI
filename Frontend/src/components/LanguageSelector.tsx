@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Globe, ChevronDown } from 'lucide-react';
 
 declare global {
   interface Window {
-    google: any;
+    google?: {
+      translate?: {
+        TranslateElement: {
+          new (options: Record<string, unknown>, elementId: string): unknown;
+          InlineLayout: {
+            SIMPLE: string;
+          };
+        };
+      };
+    };
     googleTranslateElementInit: () => void;
   }
 }
@@ -44,6 +53,8 @@ export default function LanguageSelector() {
       // Set up the initialization function
       window.googleTranslateElementInit = () => {
         try {
+          if (!window.google?.translate) return;
+
           new window.google.translate.TranslateElement({
             pageLanguage: 'en',
             includedLanguages: languages.map(lang => lang.code).join(','),
@@ -89,7 +100,7 @@ export default function LanguageSelector() {
     };
   }, []);
 
-  const translatePage = (languageCode: string) => {
+  const translatePage = useCallback((languageCode: string) => {
     if (!isTranslateReady) {
       console.log('Google Translate not ready yet');
       return;
@@ -106,7 +117,7 @@ export default function LanguageSelector() {
       console.error('Translation failed:', error);
       // Method 2: Fallback to URL-based translation
     }
-  };
+  }, [isTranslateReady]);
 
   const handleLanguageChange = (language: typeof languages[0]) => {
     setSelectedLanguage(language);
@@ -157,7 +168,7 @@ export default function LanguageSelector() {
         console.error('Error loading saved language:', error);
       }
     }
-  }, [isTranslateReady]);
+  }, [isTranslateReady, translatePage]);
 
   return (
     <div 

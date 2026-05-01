@@ -8,11 +8,18 @@ interface HeaderProps {
   onChatToggle: () => void;
 }
 
+interface StoredUser {
+  fullName?: string;
+  id?: string;
+  _id?: string;
+  email?: string;
+}
+
 export default function Header({ onChatToggle }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLegalAreasOpen, setIsLegalAreasOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<StoredUser | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { showSuccess } = useToast();
@@ -27,6 +34,8 @@ export default function Header({ onChatToggle }: HeaderProps) {
   const handleChatClick = () => {
     if (!user) {
       navigate('/login');
+    } else if (location.pathname === '/') {
+      onChatToggle();
     } else {
       navigate('/chat');
     }

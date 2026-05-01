@@ -15,7 +15,6 @@ export default function AccessiblePagination({
   currentPage,
   totalPages,
   onPageChange,
-  showFirstLast = true,
   maxVisiblePages = 7,
   className = '',
   ariaLabel = 'Pagination navigation'
@@ -28,7 +27,7 @@ export default function AccessiblePagination({
 
     const halfVisible = Math.floor(maxVisiblePages / 2);
     let start = Math.max(1, currentPage - halfVisible);
-    let end = Math.min(totalPages, start + maxVisiblePages - 1);
+    const end = Math.min(totalPages, start + maxVisiblePages - 1);
 
     // Adjust start if we're near the end
     if (end - start + 1 < maxVisiblePages) {
@@ -93,7 +92,7 @@ export default function AccessiblePagination({
 
       {/* Page numbers */}
       <div className="flex items-center space-x-1">
-        {visiblePages.map((page, index) => {
+        {visiblePages.map((page) => {
           if (typeof page === 'string') {
             return (
               <span

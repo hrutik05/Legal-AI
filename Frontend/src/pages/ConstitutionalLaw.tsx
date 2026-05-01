@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Scale, BookOpen, FileText } from 'lucide-react';
+import { Scale, BookOpen, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Breadcrumbs from '../components/Breadcrumbs';
 import RelatedLinks from '../components/RelatedLinks';

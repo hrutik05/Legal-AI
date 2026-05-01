@@ -10,6 +10,15 @@ interface UseVoiceInputResult {
   error: string | null;
 }
 
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition;
+}
+
+interface SpeechRecognitionWindow extends Window {
+  SpeechRecognition?: SpeechRecognitionConstructor;
+  webkitSpeechRecognition?: SpeechRecognitionConstructor;
+}
+
 export const useVoiceInput = (): UseVoiceInputResult => {
   const [transcript, setTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
@@ -20,7 +29,7 @@ export const useVoiceInput = (): UseVoiceInputResult => {
   useEffect(() => {
     // Check browser support
     const SpeechRecognition =
-      window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      window.SpeechRecognition || (window as SpeechRecognitionWindow).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       setIsBrowserSupported(false);

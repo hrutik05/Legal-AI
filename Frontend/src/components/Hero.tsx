@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Scale, MessageSquare, Users, BookOpen, ArrowRight, Sparkles } from 'lucide-react';
+import { MessageSquare, BookOpen, ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface HeroProps {
@@ -21,7 +21,7 @@ export default function Hero({ onChatToggle }: HeroProps) {
     if (!user) {
       navigate('/login');
     } else {
-      navigate('/chat');
+      onChatToggle();
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, User } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 import { logError, logUserAction } from '../utils/logger';
 import { apiClient } from '../utils/apiClient';
