@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
+import { apiClient } from '../utils/apiClient';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -25,17 +26,11 @@ export default function ForgotPassword() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/auth/forgot-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      const response = await apiClient.post<{ message: string }>('/auth/forgot-password', { email });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to send reset email');
-        showError('Error', data.error || 'Failed to send reset email');
+      if (!response.success) {
+        setError(response.error || 'Failed to send reset email');
+        showError('Error', response.error || 'Failed to send reset email');
         return;
       }
 

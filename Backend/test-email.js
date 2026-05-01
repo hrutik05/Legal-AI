@@ -3,6 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+function normalizeEmailPassword(emailService, password) {
+  const trimmed = password.trim();
+  return emailService.toLowerCase() === 'gmail' ? trimmed.replace(/\s+/g, '') : trimmed;
+}
+
 async function testEmailConfiguration() {
   console.log('\n=== Email Configuration Test ===\n');
   
@@ -28,7 +33,7 @@ async function testEmailConfiguration() {
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USER.trim(),
-        pass: process.env.EMAIL_PASSWORD.trim()
+        pass: normalizeEmailPassword(process.env.EMAIL_SERVICE || 'gmail', process.env.EMAIL_PASSWORD)
       }
     });
 

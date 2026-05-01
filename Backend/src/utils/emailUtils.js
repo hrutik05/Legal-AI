@@ -1,11 +1,16 @@
 import nodemailer from 'nodemailer';
 import { logInfo, logError } from './logger.js';
 
+function normalizeEmailPassword(emailService, password) {
+  const trimmed = password.trim();
+  return emailService.toLowerCase() === 'gmail' ? trimmed.replace(/\s+/g, '') : trimmed;
+}
+
 // Create transporter - configure with your email service
 const createTransporter = () => {
   // For testing: use ethereal email (free)
   // For production: use Gmail, SendGrid, etc.
-  
+
   const emailService = process.env.EMAIL_SERVICE || 'gmail';
   const emailUser = process.env.EMAIL_USER;
   const emailPassword = process.env.EMAIL_PASSWORD;
@@ -20,16 +25,16 @@ const createTransporter = () => {
       service: emailService,
       auth: {
         user: emailUser.trim(),
-        pass: emailPassword.trim()
+        pass: normalizeEmailPassword(emailService, emailPassword)
       }
     });
 
     logInfo('Email transporter created successfully', { service: emailService, user: emailUser });
     return transporter;
   } catch (err) {
-    logError(err instanceof Error ? err : new Error(String(err)), { 
+    logError(err instanceof Error ? err : new Error(String(err)), {
       location: 'createTransporter',
-      service: emailService 
+      service: emailService
     });
     return null;
   }
@@ -41,14 +46,14 @@ const createTransporter = () => {
 export async function sendPasswordResetEmail(email, resetToken, fullName) {
   try {
     const transporter = createTransporter();
-    
+
     if (!transporter) {
       logError(new Error('Email transporter not configured'), { location: 'sendPasswordResetEmail' });
       return false;
     }
 
     // Generate reset link (adjust base URL according to your frontend deployment)
-    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL || 'https://legal-ai-frontend-z0qo.onrender.com'}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER ? process.env.EMAIL_USER.trim() : 'noreply@legalai.com',
@@ -112,17 +117,17 @@ export async function sendPasswordResetEmail(email, resetToken, fullName) {
     logInfo('Attempting to send password reset email', { to: email, from: mailOptions.from });
 
     const info = await transporter.sendMail(mailOptions);
-    
-    logInfo('Password reset email sent successfully', { 
-      email, 
+
+    logInfo('Password reset email sent successfully', {
+      email,
       messageId: info.messageId,
-      response: info.response 
+      response: info.response
     });
     return true;
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
-    logError(err instanceof Error ? err : new Error(errorMessage), { 
-      action: 'sendPasswordResetEmail', 
+    logError(err instanceof Error ? err : new Error(errorMessage), {
+      action: 'sendPasswordResetEmail',
       email,
       errorDetails: errorMessage
     });
@@ -137,7 +142,7 @@ export async function sendPasswordResetEmail(email, resetToken, fullName) {
 export async function sendPasswordChangedEmail(email, fullName) {
   try {
     const transporter = createTransporter();
-    
+
     if (!transporter) {
       logError(new Error('Email transporter not configured'), { location: 'sendPasswordChangedEmail' });
       return false;
@@ -192,16 +197,16 @@ export async function sendPasswordChangedEmail(email, fullName) {
     logInfo('Attempting to send password changed confirmation email', { to: email });
 
     const info = await transporter.sendMail(mailOptions);
-    
-    logInfo('Password changed confirmation email sent successfully', { 
-      email, 
-      messageId: info.messageId 
+
+    logInfo('Password changed confirmation email sent successfully', {
+      email,
+      messageId: info.messageId
     });
     return true;
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
-    logError(err instanceof Error ? err : new Error(errorMessage), { 
-      action: 'sendPasswordChangedEmail', 
+    logError(err instanceof Error ? err : new Error(errorMessage), {
+      action: 'sendPasswordChangedEmail',
       email,
       errorDetails: errorMessage
     });

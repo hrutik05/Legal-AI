@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Lock, CheckCircle, AlertCircle } from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
+import { apiClient } from '../utils/apiClient';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -57,17 +58,15 @@ export default function ResetPassword() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token, password, passwordConfirm })
+      const response = await apiClient.post<{ message: string }>('/auth/reset-password', {
+        token,
+        password,
+        passwordConfirm
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to reset password');
-        showError('Error', data.error || 'Failed to reset password');
+      if (!response.success) {
+        setError(response.error || 'Failed to reset password');
+        showError('Error', response.error || 'Failed to reset password');
         return;
       }
 
