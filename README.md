@@ -1,16 +1,95 @@
-# About Repositoy
-Access to reliable legal information in India is frequently constrained by high consultation costs, complex statutory language, limited legal literacy, and inadequate multilingual support. These challenges disproportionately affect citizens in rural and semi-urban regions, who often remain unaware of fundamental legal rights and procedures. This paper presents the design and development of an AI-based legal chatbot that provides first level legal guidance grounded in Indian laws. The proposed system integrates Natural Language Processing (NLP), retrieval-based information access, and Large Language Models (LLMs) to interpret user queries, retrieve relevant statutory provisions from verified Indian legal sources, and generate simplified, context-aware responses. Multilingual and voice-based interaction is supported to enhance accessibility for users with low literacy levels. Experimental evaluation demonstrates that the system achieves an accuracy of 82–87% in mapping queries to appropriate legal provisions, with an average response time of 2–4 seconds. The proposed solution aims to enhance legal awareness, promote digital inclusion, and complement existing legal aid mechanisms in India
+# ⚖️ Legal AI Chatbot
+
+## AI Chatbot for Legal Advice Based on Indian Laws
+
+Legal AI Chatbot is an AI-powered web application designed to provide **first-level legal guidance based on Indian laws**. The system helps users understand legal concepts, rights, and procedures in a simple and accessible way.
+
+The chatbot uses **Natural Language Processing (NLP)**, **retrieval-based search**, and **Large Language Models (LLMs)** to understand user queries, retrieve relevant legal information, and generate simplified responses.
+
+---
+
+## 📌 Project Overview
+
+Access to reliable legal information in India is often limited due to:
+
+- High consultation costs
+- Complex legal terminology
+- Low legal awareness
+- Lack of multilingual support
+- Limited access in rural and semi-urban regions
+
+This project solves the problem by providing an intelligent chatbot that can answer legal queries related to Indian laws in a simple and user-friendly manner.
+
+The system is designed to support:
+
+- Legal query answering
+- Indian law-based response generation
+- Multilingual accessibility
+- Voice-based interaction
+- User authentication
+- Document and PDF-based legal assistance
+
+---
+
+## 🎯 Objectives
+
+- To provide basic legal guidance based on Indian laws.
+- To simplify complex legal language for common users.
+- To improve legal awareness among citizens.
+- To support multilingual and voice-based interaction.
+- To assist users in understanding legal rights and procedures.
+- To build an AI-based legal assistant using NLP and LLM technologies.
+
+---
+
+## ✨ Key Features
+
+- AI-powered legal chatbot
+- Indian law-based legal query processing
+- Gemini API integration
+- NLP-based query understanding
+- Retrieval-based legal information access
+- User authentication using JWT
+- MongoDB database integration
+- PDF-based legal document Analyzer
+- Responsive frontend interface
+- API-based backend architecture
+- SRS, synopsis, report, and research paper documentation included
+
+---
+
+## 🏗️ System Architecture
+
+The project follows a modular architecture:
+
+```text
+User
+ ↓
+Frontend
+ ↓
+Node.js Backend
+ ↓
+Python NLP Backend
+ ↓
+Legal Dataset / MongoDB / Gemini API
+ ↓
+Response Generation
+ ↓
+User Interface
+```
 
 
-## Clone Repo 
+
+## 🚀 Installation and Setup
+
 ```bash
 git clone https://github.com/hrutik05/Legal-AI.git
 cd Legal-AI
 ```
 
-### frontend setup 
+### 🌐 Frontend setup 
 create .env file and put in 
-- VITE_API_BASE_URL=http://localhost:4000
+- VITE_API_BASE_URL= local_host_url
 
 ```bash
 cd frontend
@@ -18,7 +97,7 @@ npm install
 npm  run dev
 ```
 
-### chatbot_backend setup
+### ⚙️ Chatbot_backend setup
 ```bash
 cd chatbot_backend
 python -m venv venv
@@ -27,7 +106,7 @@ pip install -r requirements.txt
 uvicorn server:app --reload --port 8000
 ```
 
-### backend setup 
+### 📄 Backend setup 
 create .env file and put this value 
 ```bash
 - GEMINI_API_KEY="yours key"
@@ -44,10 +123,10 @@ create .env file and put this value
   npm install 
   nodemon index.js
   ```
- #### if not install then use this line 
+ ### 📦 Required Node Packages
 
  ```bash 
- npm install cors express dotenv mongoose helmet morgan rateLimit authRoutes GoogleGenerativeAI nodemon morgan nodemailer
+ npm install cors express dotenv mongoose helmet morgan express-rate-limit nodemon nodemailer @google/generative-ai
  ```
 
 ### 🔧 PDF-Backend Setup
@@ -65,3 +144,28 @@ uvicorn app.main:app --reload
 [Download Final Synopsis](/PDF/final%20synopsis.pdf)<br>
 [Download Sem 7 Report](/PDF/FINAL_REPORT_STAGE_1.pdf)<br>
 [Download Research Paper](/PDF/Research_paper.pdf)
+
+## 📊 Expected Performance
+
+| Metric                 | Result                         |
+| ---------------------- | ------------------------------ |
+| Query Mapping Accuracy | 82% – 87%                      |
+| Average Response Time  | 2 – 4 seconds                  |
+| Supported Query Type   | Natural language legal queries |
+| Response Format        | Simplified legal explanation   |
+
+## ⚠️ Legal Disclaimer
+
+This chatbot provides basic legal information and awareness only.
+It does not replace professional legal advice from a qualified lawyer or legal expert.
+
+For serious legal issues, users should consult a licensed advocate.
+
+## ✅ Conclusion
+
+Legal AI Chatbot is a practical AI-based solution that improves public access to legal information in India. By combining NLP, LLMs, legal datasets, and chatbot technology, the system helps users understand legal concepts in a simple, fast, and accessible manner.
+
+## 👨‍💻 Author
+Hrutik Wakale
+
+Project: AI Chatbot for Legal Advice Based on Indian Laws
