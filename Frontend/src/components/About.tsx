@@ -3,7 +3,7 @@ import { Target, Users, Award, BookOpen, Code, Lightbulb, Github, Linkedin, Mail
 
 const teamMembers = [
   {
-    name: "Ashlesha Pathade",
+    name: "Somesh Ambre",
     role: "Lead Developer & AI Specialist",
     description: "Final year Computer Science student specializing in AI/ML and legal technology.",
     color: "from-blue-500 to-purple-600",
@@ -41,7 +41,7 @@ const teamMembers = [
     }
   },
   {
-    name: "Pratiksha Mesat",
+    name: "Amol Vasave",
     role: "Legal Research & Content", 
     description: "Final year Computer Science student specializing in research.",
     color: "from-pink-500 to-rose-600",
