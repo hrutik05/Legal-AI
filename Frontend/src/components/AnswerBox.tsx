@@ -71,31 +71,31 @@ export default function AnswerBox({
   const visibleText = animateTyping ? typedText : (answer ?? '');
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 shadow-lg dark:shadow-black/30 space-y-4 max-h-[80vh] overflow-y-auto">
-        <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+    <div className="w-full flex justify-center px-3 sm:px-0">
+      <div className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-lg dark:shadow-black/30 space-y-3 sm:space-y-4 max-h-[calc(100vh-1.5rem)] sm:max-h-[80vh] overflow-y-auto overflow-x-hidden">
+        <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
           <span className="text-2xl animate-pulse">✅</span>
-          <h2 className="text-gray-900 dark:text-white font-semibold text-lg">Legal Analysis Result</h2>
+          <h2 className="text-gray-900 dark:text-white font-semibold text-base sm:text-lg leading-tight">Legal Analysis Result</h2>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {analysis && (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                 {metrics.map((metric) => (
-                  <div key={metric.label} className="rounded-lg border border-blue-200 dark:border-cyan-800 bg-blue-50/70 dark:bg-cyan-900/20 p-3">
+                  <div key={metric.label} className="rounded-lg border border-blue-200 dark:border-cyan-800 bg-blue-50/70 dark:bg-cyan-900/20 p-3 sm:p-4">
                     <p className="text-xs text-gray-600 dark:text-gray-300">{metric.label}</p>
-                    <p className="text-xl font-bold text-blue-700 dark:text-cyan-300">{metric.value}</p>
+                    <p className="text-lg sm:text-xl font-bold text-blue-700 dark:text-cyan-300">{metric.value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Visual Analytics</p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <div className="rounded-md bg-gray-50 dark:bg-gray-800 p-3">
                     <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">Coverage vs Compressed (Pie Chart)</p>
-                    <div className="h-56">
+                    <div className="h-44 sm:h-56">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -120,7 +120,7 @@ export default function AnswerBox({
 
                   <div className="rounded-md bg-gray-50 dark:bg-gray-800 p-3">
                     <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">Legal Relevance (Radial Chart)</p>
-                    <div className="h-56">
+                    <div className="h-44 sm:h-56">
                       <ResponsiveContainer width="100%" height="100%">
                         <RadialBarChart
                           innerRadius="55%"
@@ -146,11 +146,11 @@ export default function AnswerBox({
 
                 <div className="rounded-md bg-gray-50 dark:bg-gray-800 p-3 mt-4">
                   <p className="text-xs text-gray-600 dark:text-gray-300 mb-2">Important Factors Comparison (Bar Chart)</p>
-                  <div className="h-64">
+                  <div className="h-52 sm:h-64">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={factorsBarData} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
+                      <BarChart data={factorsBarData} margin={{ top: 8, right: 12, left: 0, bottom: 8 }}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                        <XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} height={38} />
                         <YAxis domain={[0, 100]} tick={{ fontSize: 12 }} />
                         <Tooltip formatter={(value) => formatPercent(value)} />
                         <Bar dataKey="score" radius={[6, 6, 0, 0]}>
@@ -164,27 +164,27 @@ export default function AnswerBox({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                   <p className="text-xs text-gray-600 dark:text-gray-300">Word Count</p>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.word_count}</p>
+                  <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.word_count}</p>
                 </div>
-                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                   <p className="text-xs text-gray-600 dark:text-gray-300">Character Count</p>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.character_count}</p>
+                  <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.character_count}</p>
                 </div>
-                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                   <p className="text-xs text-gray-600 dark:text-gray-300">Estimated Read Time</p>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.estimated_reading_minutes} min</p>
+                  <p className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">{analysis.document_stats.estimated_reading_minutes} min</p>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Important Project Factors</p>
                 <div className="space-y-2">
                   {analysis.important_factors.map((factor) => (
                     <div key={factor.name} className="rounded-md bg-gray-50 dark:bg-gray-800 px-3 py-2">
-                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100">{factor.name}: {factor.score_percent}%</p>
+                      <p className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words">{factor.name}: {factor.score_percent}%</p>
                       <p className="text-xs text-gray-600 dark:text-gray-300">{factor.description}</p>
                     </div>
                   ))}
@@ -192,7 +192,7 @@ export default function AnswerBox({
               </div>
 
               {analysis.top_keywords.length > 0 && (
-                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+                <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-3 sm:p-4">
                   <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Top Keywords</p>
                   <div className="flex flex-wrap gap-2">
                     {analysis.top_keywords.map((word) => (
@@ -212,7 +212,7 @@ export default function AnswerBox({
           )}
         </div>
 
-        <div className="flex items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm sticky bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+        <div className="flex items-center gap-2 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm sticky bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
           <span>💡</span>
           <p>Analysis complete</p>
         </div>
