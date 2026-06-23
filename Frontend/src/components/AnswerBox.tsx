@@ -73,10 +73,10 @@ export default function AnswerBox({
   return (
     <div className="w-full flex justify-center px-3 sm:px-0">
       <div className="w-full rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 sm:p-6 shadow-lg dark:shadow-black/30 space-y-3 sm:space-y-4 max-h-[calc(100vh-1.5rem)] sm:max-h-[80vh] overflow-y-auto overflow-x-hidden">
-        <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
+        {/* <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b border-gray-200 dark:border-gray-700 fix top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
           <span className="text-2xl animate-pulse">✅</span>
           <h2 className="text-gray-900 dark:text-white font-semibold text-base sm:text-lg leading-tight">Legal Analysis Result</h2>
-        </div>
+        </div> */}
 
         <div className="space-y-3 sm:space-y-4">
           {analysis && (
@@ -212,10 +212,10 @@ export default function AnswerBox({
           )}
         </div>
 
-        <div className="flex items-center gap-2 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm sticky bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
+        {/* <div className="flex items-center gap-2 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-sm sticky bottom-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm z-10">
           <span>💡</span>
           <p>Analysis complete</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
