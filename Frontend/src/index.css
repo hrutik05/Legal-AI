@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* CSS Variables for Dark Mode */
 :root {
   /* Light mode colors */

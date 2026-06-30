@@ -97,7 +97,9 @@ const AppContent = () => {
                         <p className="text-gray-600">Chat is temporarily unavailable.</p>
                       </div>
                     }>
-                      <ChatInterface />
+                      <section id="chat" className="scroll-mt-24">
+                        <ChatInterface />
+                      </section>
                     </ErrorBoundary>
                   )}
                   <LegalAreas />

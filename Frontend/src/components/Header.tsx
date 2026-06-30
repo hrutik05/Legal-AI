@@ -92,6 +92,23 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
     }
   };
 
+  const handleLegalAreasClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById('legal-areas');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById('legal-areas');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 shadow-sm transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -107,7 +124,7 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <button 
+            <button
               onClick={handleHomeClick}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium cursor-pointer"
             >
@@ -171,21 +188,21 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
                 </div>
               </div>
             </div>
-            <button 
+            <button
               onClick={handleAboutClick}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium cursor-pointer"
             >
               About
             </button>
-            
-            <button 
+
+            <button
               onClick={handleContactClick}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium cursor-pointer"
             >
               Contact
             </button>
-            
-            <button 
+
+            <button
               onClick={handlePdfVisualizerClick}
               className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium flex items-center space-x-1 cursor-pointer">
               <span>DOC Visualizer</span>
@@ -231,7 +248,7 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
                         onClick={() => {
                           localStorage.removeItem('user');
                           setUser(null);
-                          showSuccess('Logged out','You have been logged out successfully.');
+                          showSuccess('Logged out', 'You have been logged out successfully.');
                         }}
                         className="block w-full text-left px-4 py-2 text-red-600 hover:text-red-800 transition-colors"
                       >
@@ -280,7 +297,7 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
       {isMenuOpen && (
         <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg">
           <div className="px-4 py-2 space-y-1">
-            <button 
+            <button
               onClick={() => {
                 handleHomeClick();
                 setIsMenuOpen(false);
@@ -288,8 +305,16 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
               className="block w-full text-left px-3 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
               Home
             </button>
-            <a href="#legal-areas" className="block px-3 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg">Legal Areas</a>
-            <button 
+            <button
+              onClick={() => {
+                handleLegalAreasClick();
+                setIsMenuOpen(false);
+              }}
+              className="block w-full text-left px-3 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer"
+            >
+              Legal Areas
+            </button>
+            <button
               onClick={() => {
                 handleAboutClick();
                 setIsMenuOpen(false);
@@ -297,7 +322,7 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
               className="block w-full text-left px-3 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg cursor-pointer">
               About
             </button>
-            <button 
+            <button
               onClick={() => {
                 handleContactClick();
                 setIsMenuOpen(false);
@@ -324,7 +349,7 @@ export default function Header({ onChatToggle: _onChatToggle }: HeaderProps) {
                     onClick={() => {
                       localStorage.removeItem('user');
                       setUser(null);
-                      showSuccess('Logged out','You have been logged out successfully.');
+                      showSuccess('Logged out', 'You have been logged out successfully.');
                     }}
                     className="text-red-600 hover:text-red-800 transition-colors"
                   >

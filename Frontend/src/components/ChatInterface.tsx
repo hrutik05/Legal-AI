@@ -69,6 +69,8 @@ function AssistantMessageContent({ text, animate, onDone }: AssistantMessageCont
 }
 
 function ChatInterface() {
+  const isDesktopViewport =
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches;
   const [conversations, setConversations] = useState<Conversation[]>([
     {
       id: '1',
@@ -78,7 +80,7 @@ function ChatInterface() {
     },
   ]);
   const [activeConversationId, setActiveConversationId] = useState('1');
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(isDesktopViewport);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<ChatHistoryItem[]>([]);
@@ -208,6 +210,24 @@ function ChatInterface() {
 
   useEffect(() => {
     fetchHistory();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const syncSidebarState = (event: MediaQueryListEvent | MediaQueryList) => {
+      setSidebarOpen(event.matches);
+    };
+
+    syncSidebarState(mediaQuery);
+
+    const onChange = (event: MediaQueryListEvent) => syncSidebarState(event);
+    mediaQuery.addEventListener('change', onChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', onChange);
+    };
   }, []);
 
   const scrollToBottom = () => {
@@ -554,7 +574,7 @@ function ChatInterface() {
     });
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
+    <div className="flex h-[100dvh] max-w-full bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Sidebar */}
       <>
         {sidebarOpen && (
@@ -592,8 +612,8 @@ function ChatInterface() {
               <div
                 key={conv.id}
                 className={`group relative mb-1 rounded-lg transition-all ${conv.id === activeConversationId
-                    ? 'bg-gray-800'
-                    : 'hover:bg-gray-800'
+                  ? 'bg-gray-800'
+                  : 'hover:bg-gray-800'
                   }`}
               >
                 <button
@@ -655,7 +675,7 @@ function ChatInterface() {
       </>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 flex min-h-0 flex-col bg-gray-50 dark:bg-gray-900">
         <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">
@@ -665,7 +685,7 @@ function ChatInterface() {
               >
                 <Menu className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-sm sm:text-lg md:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate max-w-[220px] sm:max-w-none">
                 ChatBot-AI Legal Assistant
               </h1>
             </div>
@@ -704,7 +724,7 @@ function ChatInterface() {
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           <div id="chat-page" className="max-w-4xl mx-auto px-4 py-8">
             {!activeConversation?.messages.length ? (
               <div className="text-center text-gray-600 dark:text-gray-300 py-20">
@@ -724,9 +744,9 @@ function ChatInterface() {
                   )}
                   <div className="flex flex-col gap-2">
                     <div
-                      className={`max-w-[80%] px-4 py-3 rounded-2xl ${msg.role === 'user'
-                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                          : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
+                      className={`max-w-[90%] sm:max-w-[80%] px-4 py-3 rounded-2xl ${msg.role === 'user'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100'
                         }`}
                     >
                       {msg.role === 'assistant' ? (
@@ -748,8 +768,8 @@ function ChatInterface() {
                           onClick={() => handleSpeakMessage(msg.id, msg.content)}
                           title={speakingMessageId === msg.id ? 'Stop speaking' : 'Speak message'}
                           className={`p-2 rounded-lg transition-all ${speakingMessageId === msg.id
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                             }`}
                         >
                           {speakingMessageId === msg.id ? (
@@ -771,8 +791,8 @@ function ChatInterface() {
                           }}
                           title="Stop speaking immediately"
                           className={`p-2 rounded-lg transition-all ${copiedMessageId === msg.id
-                              ? ' text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                            ? ' text-white'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                             }`}
                         >
                           <X className="w-4 h-4" />
@@ -783,8 +803,8 @@ function ChatInterface() {
                           onClick={() => handleCopyMessage(msg.id, msg.content)}
                           title="Copy answer"
                           className={`p-2 rounded-lg transition-all ${copiedMessageId === msg.id
-                              ? 'bg-green-500 text-white'
-                              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                            ? 'bg-green-500 text-white'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                             }`}
                         >
                           {copiedMessageId === msg.id ? (
@@ -847,8 +867,8 @@ function ChatInterface() {
                 onChange={handleInputChange}
                 placeholder={isListening ? 'Listening...' : 'Type your message...'}
                 className={`w-full resize-none rounded-2xl border px-4 py-3 pr-24 focus:outline-none focus:ring-2 ${isListening
-                    ? 'border-red-400 bg-red-50 dark:bg-red-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-red-500'
-                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-blue-500'
+                  ? 'border-red-400 bg-red-50 dark:bg-red-900/20 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-red-500'
+                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:ring-blue-500'
                   }`}
               />
 
@@ -858,8 +878,8 @@ function ChatInterface() {
                 onClick={handleVoiceInput}
                 title={isListening ? 'Stop listening' : 'Start voice input'}
                 className={`absolute right-14 bottom-2 p-2 rounded-xl transition-all ${isListening
-                    ? 'bg-red-500 text-white hover:bg-red-600'
-                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  ? 'bg-red-500 text-white hover:bg-red-600'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
               >
                 {isListening ? (
