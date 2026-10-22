@@ -1,4 +1,4 @@
-# ⚖️ Legal AI Chatbot
+# Legal AI Chatbot
 
 ## AI Chatbot for Legal Advice Based on Indian Laws
 
@@ -8,7 +8,7 @@ The chatbot uses **Natural Language Processing (NLP)**, **retrieval-based search
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 Access to reliable legal information in India is often limited due to:
 
@@ -31,7 +31,7 @@ The system is designed to support:
 
 ---
 
-## 🎯 Objectives
+##  Objectives
 
 - To provide basic legal guidance based on Indian laws.
 - To simplify complex legal language for common users.
@@ -42,7 +42,7 @@ The system is designed to support:
 
 ---
 
-## ✨ Key Features
+##  Key Features
 
 - AI-powered legal chatbot
 - Indian law-based legal query processing
@@ -58,7 +58,7 @@ The system is designed to support:
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 The project follows a modular architecture:
 
@@ -80,14 +80,14 @@ User Interface
 
 
 
-## 🚀 Installation and Setup
+##  Installation and Setup
 
 ```bash
 git clone https://github.com/hrutik05/Legal-AI.git
 cd Legal-AI
 ```
 
-### 🌐 Frontend setup 
+###  Frontend setup 
 create .env file and put in 
 - VITE_API_BASE_URL= local_host_url
 
@@ -97,7 +97,7 @@ npm install
 npm  run dev
 ```
 
-### ⚙️ Chatbot_backend setup
+###  Chatbot_backend setup
 ```bash
 cd chatbot_backend
 python -m venv venv
@@ -106,7 +106,7 @@ pip install -r requirements.txt
 uvicorn server:app --reload --port 8000
 ```
 
-### 📄 Backend setup 
+###  Backend setup 
 create .env file and put this value 
 ```bash
 - GEMINI_API_KEY="yours key"
@@ -123,7 +123,7 @@ create .env file and put this value
   npm install 
   nodemon index.js
   ```
- ### 📦 Required Node Packages
+ ###  Required Node Packages
 
  ```bash 
  npm install cors express dotenv mongoose helmet morgan express-rate-limit nodemon nodemailer @google/generative-ai
@@ -139,13 +139,13 @@ GEMINI_API_KEY=your_gemini_api_key_here
 uvicorn app.main:app --reload
 ```
   
-### 📘 Documentation
+###  Documentation
 [Download SRS Report](/PDF/SRS_Report[1].pdf) <br>
 [Download Final Synopsis](/PDF/final%20synopsis.pdf)<br>
 [Download Sem 7 Report](/PDF/FINAL_REPORT_STAGE_1.pdf)<br>
 [Download Research Paper](/PDF/Research_paper.pdf)
 
-## 📊 Expected Performance
+##  Expected Performance
 
 | Metric                 | Result                         |
 | ---------------------- | ------------------------------ |
@@ -154,18 +154,18 @@ uvicorn app.main:app --reload
 | Supported Query Type   | Natural language legal queries |
 | Response Format        | Simplified legal explanation   |
 
-## ⚠️ Legal Disclaimer
+##  Legal Disclaimer
 
 This chatbot provides basic legal information and awareness only.
 It does not replace professional legal advice from a qualified lawyer or legal expert.
 
 For serious legal issues, users should consult a licensed advocate.
 
-## ✅ Conclusion
+##  Conclusion
 
 Legal AI Chatbot is a practical AI-based solution that improves public access to legal information in India. By combining NLP, LLMs, legal datasets, and chatbot technology, the system helps users understand legal concepts in a simple, fast, and accessible manner.
 
-## 👨‍💻 Author
+##  Author
 Hrutik Wakale
 
 Project: AI Chatbot for Legal Advice Based on Indian Laws
