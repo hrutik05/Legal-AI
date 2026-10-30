@@ -3,7 +3,7 @@ import { Target, Users, Award, BookOpen, Code, Lightbulb, Github, Linkedin, Mail
 
 const teamMembers = [
   {
-    name: "Ashlesha Pathade",
+    name: "Hrutik Wakale",
     role: "Lead Developer & AI Specialist",
     description: "Final year Computer Science student specializing in AI/ML and legal technology.",
     color: "from-blue-500 to-purple-600",
@@ -14,7 +14,7 @@ const teamMembers = [
       "Database Architecture & Management",
       "Performance Optimization"
     ],
-    skills: ["Machine Learning", "Natural Language Processing", "System Architecture"],
+    skills: ["Machine Learning", "Natural Language Processing", "System Architecture","GenAI"],
     social: {
       github: "#",
       linkedin: "#", 
@@ -22,7 +22,7 @@ const teamMembers = [
     }
   },
   {
-    name: "Hrutik Wakale", 
+    name: "Ashlesha", 
     role: "Full Stack Developer",
     description: "Computer Science student focused on scalable systems and database management.",
     color: "from-green-500 to-teal-600",
@@ -30,7 +30,7 @@ const teamMembers = [
     responsibilities: [
       "Database Management",
       "API Development",
-      "AI Tool Expert", 
+      "Tool Expert", 
       "Designing full Front end"
     ],
     skills: ["Tailwand.css", "React.js", "Computer Science", "Java"],
@@ -41,7 +41,7 @@ const teamMembers = [
     }
   },
   {
-    name: "Pratiksha Mesat",
+    name: "Pratiksha",
     role: "Legal Research & Content", 
     description: "Final year Computer Science student specializing in research.",
     color: "from-pink-500 to-rose-600",
